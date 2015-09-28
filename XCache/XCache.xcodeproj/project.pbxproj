@@ -19,6 +19,8 @@
 		214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4361BB550CC009FDB78 /* XCacheQueue.m */; };
 		214EA43A1BB550D6009FDB78 /* XCachePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4391BB550D6009FDB78 /* XCachePool.m */; };
 		214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA43C1BB55124009FDB78 /* XCacheObject.m */; };
+		21F0C9151BB90917001E7E83 /* XCacheMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21F0C9141BB90917001E7E83 /* XCacheMemory.m */; };
+		21F0C9161BB90917001E7E83 /* XCacheMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21F0C9141BB90917001E7E83 /* XCacheMemory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,7 +34,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		214778CB1BB8DA0D00686755 /* XCacheHolderProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheHolderProtocol.h; sourceTree = "<group>"; };
 		214EA4031BB54FC4009FDB78 /* XCache.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCache.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		214EA4071BB54FC4009FDB78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		214EA4081BB54FC4009FDB78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -57,6 +58,9 @@
 		214EA4391BB550D6009FDB78 /* XCachePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCachePool.m; sourceTree = "<group>"; };
 		214EA43B1BB55124009FDB78 /* XCacheObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObject.h; sourceTree = "<group>"; };
 		214EA43C1BB55124009FDB78 /* XCacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheObject.m; sourceTree = "<group>"; };
+		21F0C9121BB906D3001E7E83 /* XCacheObjectPersistentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObjectPersistentProtocol.h; sourceTree = "<group>"; };
+		21F0C9131BB90917001E7E83 /* XCacheMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheMemory.h; sourceTree = "<group>"; };
+		21F0C9141BB90917001E7E83 /* XCacheMemory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheMemory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				214EA42E1BB55097009FDB78 /* XCacheHeader.h */,
+				21F0C9121BB906D3001E7E83 /* XCacheObjectPersistentProtocol.h */,
 				214EA42F1BB550A2009FDB78 /* XCache.h */,
 				214EA4301BB550A2009FDB78 /* XCache.m */,
 				214EA4321BB550C5009FDB78 /* XCacheConfig.h */,
@@ -151,7 +156,8 @@
 				214EA4391BB550D6009FDB78 /* XCachePool.m */,
 				214EA43B1BB55124009FDB78 /* XCacheObject.h */,
 				214EA43C1BB55124009FDB78 /* XCacheObject.m */,
-				214778CB1BB8DA0D00686755 /* XCacheHolderProtocol.h */,
+				21F0C9131BB90917001E7E83 /* XCacheMemory.h */,
+				21F0C9141BB90917001E7E83 /* XCacheMemory.m */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -263,6 +269,7 @@
 				214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */,
 				214EA4091BB54FC4009FDB78 /* main.m in Sources */,
 				214EA4311BB550A2009FDB78 /* XCache.m in Sources */,
+				21F0C9151BB90917001E7E83 /* XCacheMemory.m in Sources */,
 				214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21F0C9161BB90917001E7E83 /* XCacheMemory.m in Sources */,
 				214EA4231BB54FC4009FDB78 /* XCacheTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +402,11 @@
 				INFOPLIST_FILE = XCache/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XCache/services/bee.services.alipay/vendor/AlipaySDK/openssl/lib",
+					"$(PROJECT_DIR)/XCache/services/bee.services.share.weixin/vendor/WeixinSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -405,6 +418,11 @@
 				INFOPLIST_FILE = XCache/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XCache/services/bee.services.alipay/vendor/AlipaySDK/openssl/lib",
+					"$(PROJECT_DIR)/XCache/services/bee.services.share.weixin/vendor/WeixinSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -423,6 +441,11 @@
 				);
 				INFOPLIST_FILE = XCacheTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XCache/services/bee.services.alipay/vendor/AlipaySDK/openssl/lib",
+					"$(PROJECT_DIR)/XCache/services/bee.services.share.weixin/vendor/WeixinSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCache.app/XCache";
 			};
@@ -438,6 +461,11 @@
 				);
 				INFOPLIST_FILE = XCacheTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/XCache/services/bee.services.alipay/vendor/AlipaySDK/openssl/lib",
+					"$(PROJECT_DIR)/XCache/services/bee.services.share.weixin/vendor/WeixinSDK",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCache.app/XCache";
 			};
