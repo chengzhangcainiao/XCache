@@ -32,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		214778CB1BB8DA0D00686755 /* XCacheHolderProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheHolderProtocol.h; sourceTree = "<group>"; };
 		214EA4031BB54FC4009FDB78 /* XCache.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCache.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		214EA4071BB54FC4009FDB78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		214EA4081BB54FC4009FDB78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -150,6 +151,7 @@
 				214EA4391BB550D6009FDB78 /* XCachePool.m */,
 				214EA43B1BB55124009FDB78 /* XCacheObject.h */,
 				214EA43C1BB55124009FDB78 /* XCacheObject.m */,
+				214778CB1BB8DA0D00686755 /* XCacheHolderProtocol.h */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -460,6 +462,7 @@
 				214EA4281BB54FC4009FDB78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		214EA4291BB54FC4009FDB78 /* Build configuration list for PBXNativeTarget "XCacheTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +471,7 @@
 				214EA42B1BB54FC4009FDB78 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

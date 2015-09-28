@@ -10,4 +10,6 @@
 
 @interface XCachePool : NSObject
 
+
+
 @end

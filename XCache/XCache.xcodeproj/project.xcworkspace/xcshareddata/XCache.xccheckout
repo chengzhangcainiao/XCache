@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>9953FBD6-2595-4BD7-8D8A-61C0C372FBBD</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>XCache</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>8220C6E40DE80B163D0A725BB0B784E57A188A33</key>
 		<string>github.com:chengzhangcainiao/XCache.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>XCache/XCache.xcodeproj/project.xcworkspace</string>
+	<string>XCache/XCache.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8220C6E40DE80B163D0A725BB0B784E57A188A33</key>
