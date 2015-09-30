@@ -18,10 +18,12 @@
 
 + (NSInteger)maxCacheOnMemorySize;
 + (NSInteger)maxCacheOnDiskSize;
-+ (NSString *)cacheFolderPath;
-+ (NSString *)rootPath;
++ (NSString *)rootFolderName;
 
 + (NSInteger)nowTimestamp;
 + (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration;
+
+- (NSString *)encodedString:(NSString *)string;
+- (NSString *)decodedString:(NSString *)string;
 
 @end

@@ -36,14 +36,8 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return 20;
 }
 
-+ (NSString *)cacheFolderPath {
-    return [self rootPath];//换成自定义的path
-}
-
-+ (NSString *)rootPath {
-    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    cachePath = [cachePath stringByAppendingPathComponent:XCacheFolderName];
-    return cachePath;
++ (NSString *)rootFolderName {
+    return XCacheFolderName;
 }
 
 + (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration {//当前时间+持续时间=过期时间
@@ -53,6 +47,32 @@ static NSString *XCacheFolderName = @"XCacheObjects";
 
 + (NSInteger)nowTimestamp {
     return (NSInteger)ceil([[NSDate date] timeIntervalSince1970]); 
+}
+
+- (NSString *)encodedString:(NSString *)string
+{
+    if (![string length])
+        return @"";
+    
+    CFStringRef static const charsToEscape = CFSTR(".:/");
+    CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                        (__bridge CFStringRef)string,
+                                                                        NULL,
+                                                                        charsToEscape,
+                                                                        kCFStringEncodingUTF8);
+    return (__bridge_transfer NSString *)escapedString;
+}
+
+- (NSString *)decodedString:(NSString *)string
+{
+    if (![string length])
+        return @"";
+    
+    CFStringRef unescapedString = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
+                                                                                          (__bridge CFStringRef)string,
+                                                                                          CFSTR(""),
+                                                                                          kCFStringEncodingUTF8);
+    return (__bridge_transfer NSString *)unescapedString;
 }
 
 @end

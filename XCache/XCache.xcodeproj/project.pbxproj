@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		213AA9771BBBA36200E54EF6 /* NSArray+XCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AA9761BBBA36200E54EF6 /* NSArray+XCache.m */; };
+		213AA97A1BBBA6F000E54EF6 /* NSFileManager+XCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AA9791BBBA6F000E54EF6 /* NSFileManager+XCache.m */; };
+		213AA97D1BBBB07A00E54EF6 /* NSMutableArray+XCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AA97C1BBBB07A00E54EF6 /* NSMutableArray+XCache.m */; };
+		213AA9801BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AA97F1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m */; };
 		214EA4091BB54FC4009FDB78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4081BB54FC4009FDB78 /* main.m */; };
 		214EA40C1BB54FC4009FDB78 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA40B1BB54FC4009FDB78 /* AppDelegate.m */; };
 		214EA40F1BB54FC4009FDB78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA40E1BB54FC4009FDB78 /* ViewController.m */; };
@@ -34,6 +38,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		213AA9751BBBA36200E54EF6 /* NSArray+XCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+XCache.h"; sourceTree = "<group>"; };
+		213AA9761BBBA36200E54EF6 /* NSArray+XCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+XCache.m"; sourceTree = "<group>"; };
+		213AA9781BBBA6F000E54EF6 /* NSFileManager+XCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+XCache.h"; sourceTree = "<group>"; };
+		213AA9791BBBA6F000E54EF6 /* NSFileManager+XCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+XCache.m"; sourceTree = "<group>"; };
+		213AA97B1BBBB07A00E54EF6 /* NSMutableArray+XCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+XCache.h"; sourceTree = "<group>"; };
+		213AA97C1BBBB07A00E54EF6 /* NSMutableArray+XCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+XCache.m"; sourceTree = "<group>"; };
+		213AA97E1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+XCache.h"; sourceTree = "<group>"; };
+		213AA97F1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+XCache.m"; sourceTree = "<group>"; };
 		214EA4031BB54FC4009FDB78 /* XCache.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCache.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		214EA4071BB54FC4009FDB78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		214EA4081BB54FC4009FDB78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -154,6 +166,14 @@
 				214EA43C1BB55124009FDB78 /* XCacheObject.m */,
 				21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */,
 				21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */,
+				213AA9751BBBA36200E54EF6 /* NSArray+XCache.h */,
+				213AA9761BBBA36200E54EF6 /* NSArray+XCache.m */,
+				213AA9781BBBA6F000E54EF6 /* NSFileManager+XCache.h */,
+				213AA9791BBBA6F000E54EF6 /* NSFileManager+XCache.m */,
+				213AA97B1BBBB07A00E54EF6 /* NSMutableArray+XCache.h */,
+				213AA97C1BBBB07A00E54EF6 /* NSMutableArray+XCache.m */,
+				213AA97E1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.h */,
+				213AA97F1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -260,13 +280,17 @@
 			files = (
 				214EA43A1BB550D6009FDB78 /* XCachePool.m in Sources */,
 				214EA40F1BB54FC4009FDB78 /* ViewController.m in Sources */,
+				213AA9801BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m in Sources */,
 				214EA40C1BB54FC4009FDB78 /* AppDelegate.m in Sources */,
+				213AA97D1BBBB07A00E54EF6 /* NSMutableArray+XCache.m in Sources */,
 				214EA4341BB550C5009FDB78 /* XCacheConfig.m in Sources */,
 				214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */,
 				214EA4091BB54FC4009FDB78 /* main.m in Sources */,
 				214EA4311BB550A2009FDB78 /* XCache.m in Sources */,
 				214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */,
+				213AA9771BBBA36200E54EF6 /* NSArray+XCache.m in Sources */,
 				21D8DC581BBAF60F00EB61A4 /* XCacheStore.m in Sources */,
+				213AA97A1BBBA6F000E54EF6 /* NSFileManager+XCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

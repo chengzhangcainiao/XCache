@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "NSFileManager+XCache.h"
+#import "NSMutableDictionary+XCache.h"
 
 @interface ViewController ()
 
@@ -16,7 +18,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+//    NSString *path = [NSFileManager pathForRootDirectoryWithPath:@"ccc"];
+//    NSString *path = @"/dawd/dawdaw/ccc";//默认在document/dawd/dawdaw/ccc
+//    [NSFileManager createFileAtPath:path withContent:@"dawdawd"];
+    
+    
+//    NSString *path = @"/A";
+//    NSArray *arrays = [NSFileManager listItemsInDirectoryAtPath:path deep:NO];
+//    [NSFileManager moveItemAtPath:@"/A" toPath:@"/XXX" error:nil];
 }
 
 - (void)didReceiveMemoryWarning {
