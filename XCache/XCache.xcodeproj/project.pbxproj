@@ -19,8 +19,8 @@
 		214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4361BB550CC009FDB78 /* XCacheQueue.m */; };
 		214EA43A1BB550D6009FDB78 /* XCachePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4391BB550D6009FDB78 /* XCachePool.m */; };
 		214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA43C1BB55124009FDB78 /* XCacheObject.m */; };
-		21F0C9151BB90917001E7E83 /* XCacheMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21F0C9141BB90917001E7E83 /* XCacheMemory.m */; };
-		21F0C9161BB90917001E7E83 /* XCacheMemory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21F0C9141BB90917001E7E83 /* XCacheMemory.m */; };
+		21D8DC581BBAF60F00EB61A4 /* XCacheStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */; };
+		21D8DC591BBAF60F00EB61A4 /* XCacheStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,9 +58,8 @@
 		214EA4391BB550D6009FDB78 /* XCachePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCachePool.m; sourceTree = "<group>"; };
 		214EA43B1BB55124009FDB78 /* XCacheObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObject.h; sourceTree = "<group>"; };
 		214EA43C1BB55124009FDB78 /* XCacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheObject.m; sourceTree = "<group>"; };
-		21F0C9121BB906D3001E7E83 /* XCacheObjectPersistentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObjectPersistentProtocol.h; sourceTree = "<group>"; };
-		21F0C9131BB90917001E7E83 /* XCacheMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheMemory.h; sourceTree = "<group>"; };
-		21F0C9141BB90917001E7E83 /* XCacheMemory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheMemory.m; sourceTree = "<group>"; };
+		21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStore.h; sourceTree = "<group>"; };
+		21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheStore.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				214EA42E1BB55097009FDB78 /* XCacheHeader.h */,
-				21F0C9121BB906D3001E7E83 /* XCacheObjectPersistentProtocol.h */,
 				214EA42F1BB550A2009FDB78 /* XCache.h */,
 				214EA4301BB550A2009FDB78 /* XCache.m */,
 				214EA4321BB550C5009FDB78 /* XCacheConfig.h */,
@@ -156,8 +154,8 @@
 				214EA4391BB550D6009FDB78 /* XCachePool.m */,
 				214EA43B1BB55124009FDB78 /* XCacheObject.h */,
 				214EA43C1BB55124009FDB78 /* XCacheObject.m */,
-				21F0C9131BB90917001E7E83 /* XCacheMemory.h */,
-				21F0C9141BB90917001E7E83 /* XCacheMemory.m */,
+				21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */,
+				21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -269,8 +267,8 @@
 				214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */,
 				214EA4091BB54FC4009FDB78 /* main.m in Sources */,
 				214EA4311BB550A2009FDB78 /* XCache.m in Sources */,
-				21F0C9151BB90917001E7E83 /* XCacheMemory.m in Sources */,
 				214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */,
+				21D8DC581BBAF60F00EB61A4 /* XCacheStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,8 +276,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21F0C9161BB90917001E7E83 /* XCacheMemory.m in Sources */,
 				214EA4231BB54FC4009FDB78 /* XCacheTests.m in Sources */,
+				21D8DC591BBAF60F00EB61A4 /* XCacheStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

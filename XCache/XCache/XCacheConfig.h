@@ -10,4 +10,12 @@
 
 @interface XCacheConfig : NSObject
 
++ (NSInteger)maxCacheOnMemoryTime;
++ (NSInteger)maxCacheOnDiskTime;
+
++ (NSInteger)maxCacheOnMemorySize;
++ (NSInteger)maxCacheOnDiskSize;
++ (NSString *)cacheFolderPath;
++ (NSString *)rootPath;
+
 @end

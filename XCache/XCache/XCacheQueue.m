@@ -10,4 +10,8 @@
 
 @implementation XCacheQueue
 
+- (NSArray *)peekAllCachedObjects {
+    return nil;
+}
+
 @end
