@@ -8,6 +8,28 @@
 
 #import "XCacheStore.h"
 
+@interface XCacheStore ()
+
+@end
+
+
 @implementation XCacheStore
+
++ (instancetype)sharedInstance {
+    static XCacheStore *storage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storage = [[XCacheStore alloc] init];
+    });
+    return storage;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
 
 @end

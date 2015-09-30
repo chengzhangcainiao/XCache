@@ -28,6 +28,14 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return 200 * 1024 *1024;//200M
 }
 
++ (NSInteger)defaultMaxQueueSize {
+    return 10;
+}
+
++ (NSInteger)defaultMaxPoolSize {
+    return 20;
+}
+
 + (NSString *)cacheFolderPath {
     return [self rootPath];//换成自定义的path
 }
@@ -36,6 +44,15 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     cachePath = [cachePath stringByAppendingPathComponent:XCacheFolderName];
     return cachePath;
+}
+
++ (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration {//当前时间+持续时间=过期时间
+    duration = (duration > 0) ? duration : [self maxCacheOnMemoryTime];
+    return [self nowTimestamp] + duration;
+}
+
++ (NSInteger)nowTimestamp {
+    return (NSInteger)ceil([[NSDate date] timeIntervalSince1970]); 
 }
 
 @end

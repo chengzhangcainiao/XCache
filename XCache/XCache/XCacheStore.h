@@ -29,6 +29,6 @@
 
 @interface XCacheStore : NSObject
 
-
++ (instancetype)sharedInstance;
 
 @end

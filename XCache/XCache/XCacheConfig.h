@@ -13,9 +13,15 @@
 + (NSInteger)maxCacheOnMemoryTime;
 + (NSInteger)maxCacheOnDiskTime;
 
++ (NSInteger)defaultMaxQueueSize;
++ (NSInteger)defaultMaxPoolSize;
+
 + (NSInteger)maxCacheOnMemorySize;
 + (NSInteger)maxCacheOnDiskSize;
 + (NSString *)cacheFolderPath;
 + (NSString *)rootPath;
+
++ (NSInteger)nowTimestamp;
++ (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration;
 
 @end

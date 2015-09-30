@@ -47,7 +47,6 @@
 		214EA41C1BB54FC4009FDB78 /* XCacheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCacheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		214EA4211BB54FC4009FDB78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		214EA4221BB54FC4009FDB78 /* XCacheTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCacheTests.m; sourceTree = "<group>"; };
-		214EA42E1BB55097009FDB78 /* XCacheHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCacheHeader.h; sourceTree = "<group>"; };
 		214EA42F1BB550A2009FDB78 /* XCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCache.h; sourceTree = "<group>"; };
 		214EA4301BB550A2009FDB78 /* XCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCache.m; sourceTree = "<group>"; };
 		214EA4321BB550C5009FDB78 /* XCacheConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheConfig.h; sourceTree = "<group>"; };
@@ -143,7 +142,6 @@
 		214EA42C1BB54FCE009FDB78 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
-				214EA42E1BB55097009FDB78 /* XCacheHeader.h */,
 				214EA42F1BB550A2009FDB78 /* XCache.h */,
 				214EA4301BB550A2009FDB78 /* XCache.m */,
 				214EA4321BB550C5009FDB78 /* XCacheConfig.h */,

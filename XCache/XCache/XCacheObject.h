@@ -10,4 +10,16 @@
 
 @interface XCacheObject : NSObject
 
+- (instancetype)initWithData:(NSData *)data;
+- (instancetype)initWithData:(id)aData Duration:(NSInteger)duration;
+
+- (NSData *)cacheData;
+- (NSInteger)cacheSize;
+- (id)dataInOptions;
+- (NSInteger)expirateTimestampInOptions; 
+
+- (void)updateCacheObjectLifeDuration:(NSInteger)duration;
+
+- (BOOL)isExpirate;
+
 @end
