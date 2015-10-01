@@ -27,7 +27,17 @@
 5. 定期查看内存缓存，超过规定大小时，按照算法，将部分对象归档到磁盘文件.
 */
 
-@interface XCacheStore : NSObject
+@interface XCacheStore : NSCache <NSFastEnumeration>
+
+/**
+ *  当前内存缓存对象总长度
+ */
+@property (nonatomic, readonly) NSUInteger count;
+
+/**
+ *  当前内存占用总大小
+ */
+@property (nonatomic, readonly) NSUInteger totalCost;
 
 + (instancetype)sharedInstance;
 
