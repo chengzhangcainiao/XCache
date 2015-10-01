@@ -10,10 +10,19 @@
 
 @interface XCacheStore ()
 
+@property (nonatomic, strong) NSRecursiveLock *lock;
+
 @end
 
 
 @implementation XCacheStore
+
+- (NSRecursiveLock *)lock {
+    if (!_lock) {
+        _lock = [[NSRecursiveLock alloc] init];
+    }
+    return _lock;
+}
 
 + (instancetype)sharedInstance {
     static XCacheStore *storage = nil;
