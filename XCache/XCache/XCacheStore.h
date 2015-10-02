@@ -41,4 +41,6 @@
 
 + (instancetype)sharedInstance;
 
+- (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL **isStop))block;
+
 @end

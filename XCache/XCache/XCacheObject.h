@@ -10,6 +10,9 @@
 
 @interface XCacheObject : NSObject
 
+@property (nonatomic, strong, readonly) NSData *data;
+@property (nonatomic, strong, readonly) NSMutableDictionary *options;
+
 - (instancetype)initWithData:(NSData *)data;
 - (instancetype)initWithData:(id)aData Duration:(NSInteger)duration;
 

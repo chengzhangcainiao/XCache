@@ -23,6 +23,10 @@
 		214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4361BB550CC009FDB78 /* XCacheQueue.m */; };
 		214EA43A1BB550D6009FDB78 /* XCachePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4391BB550D6009FDB78 /* XCachePool.m */; };
 		214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA43C1BB55124009FDB78 /* XCacheObject.m */; };
+		21B1C3311BBE494A00DCD515 /* XCacheFastTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */; };
+		21B1C3321BBE494A00DCD515 /* XCacheFastTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */; };
+		21B1C3361BBE78CB00DCD515 /* XCacheStrategyFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */; };
+		21B1C3371BBE78CB00DCD515 /* XCacheStrategyFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */; };
 		21D8DC581BBAF60F00EB61A4 /* XCacheStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */; };
 		21D8DC591BBAF60F00EB61A4 /* XCacheStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */; };
 /* End PBXBuildFile section */
@@ -69,6 +73,11 @@
 		214EA4391BB550D6009FDB78 /* XCachePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCachePool.m; sourceTree = "<group>"; };
 		214EA43B1BB55124009FDB78 /* XCacheObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObject.h; sourceTree = "<group>"; };
 		214EA43C1BB55124009FDB78 /* XCacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheObject.m; sourceTree = "<group>"; };
+		21B1C32F1BBE494A00DCD515 /* XCacheFastTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheFastTable.h; sourceTree = "<group>"; };
+		21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheFastTable.m; sourceTree = "<group>"; };
+		21B1C3331BBE788B00DCD515 /* XCacheStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStrategyProtocol.h; sourceTree = "<group>"; };
+		21B1C3341BBE78CB00DCD515 /* XCacheStrategyFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStrategyFactory.h; sourceTree = "<group>"; };
+		21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheStrategyFactory.m; sourceTree = "<group>"; };
 		21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStore.h; sourceTree = "<group>"; };
 		21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheStore.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,6 +175,11 @@
 				214EA43C1BB55124009FDB78 /* XCacheObject.m */,
 				21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */,
 				21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */,
+				21B1C32F1BBE494A00DCD515 /* XCacheFastTable.h */,
+				21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */,
+				21B1C3331BBE788B00DCD515 /* XCacheStrategyProtocol.h */,
+				21B1C3341BBE78CB00DCD515 /* XCacheStrategyFactory.h */,
+				21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */,
 				213AA9751BBBA36200E54EF6 /* NSArray+XCache.h */,
 				213AA9761BBBA36200E54EF6 /* NSArray+XCache.m */,
 				213AA9781BBBA6F000E54EF6 /* NSFileManager+XCache.h */,
@@ -290,7 +304,9 @@
 				214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */,
 				213AA9771BBBA36200E54EF6 /* NSArray+XCache.m in Sources */,
 				21D8DC581BBAF60F00EB61A4 /* XCacheStore.m in Sources */,
+				21B1C3311BBE494A00DCD515 /* XCacheFastTable.m in Sources */,
 				213AA97A1BBBA6F000E54EF6 /* NSFileManager+XCache.m in Sources */,
+				21B1C3361BBE78CB00DCD515 /* XCacheStrategyFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,7 +314,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21B1C3371BBE78CB00DCD515 /* XCacheStrategyFactory.m in Sources */,
 				214EA4231BB54FC4009FDB78 /* XCacheTests.m in Sources */,
+				21B1C3321BBE494A00DCD515 /* XCacheFastTable.m in Sources */,
 				21D8DC591BBAF60F00EB61A4 /* XCacheStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

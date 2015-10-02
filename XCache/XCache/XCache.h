@@ -20,22 +20,25 @@
 
 + (instancetype)sharedInstance;
 
+#pragma mark - normal
 - (void)saveObject:(id)object ForKey:(NSString *)key;
 - (void)saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time;
 
+#pragma mark - queue
 - (XCacheQueue *)addQueueWithIdentifier:(NSString *)identify
                          MaxMemoryCount:(NSInteger)count
                     IsAutoArchiveToDisk:(BOOL)isAutoArchive;
 
 - (XCacheQueue *)findQueueByIdentifier:(NSString *)identify;
+- (void)pushObjct:(id)object ToQueueWithIdentifier:(NSString *)identifier;
+- (id)popObjectFromQueueWithIdentifier:(NSString *)identifier;
 
+#pragma mark - pool
 - (XCachePool *)addPoolWithIdentifier:(NSString *)identify
                        MaxMemoryCount:(NSInteger)count;
 
 - (XCachePool *)findPoolByIdentifier:(NSString *)identify;
-
-
-- (XCacheObject *)findObjectWithKey:(NSString *)key;
+- (id)getObjectFromPoolWithIdentifier:(NSString *)identify;
 
 - (void)removeObjectWithKey:(NSString *)key;
 - (void)removeAllObjects;

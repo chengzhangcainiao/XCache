@@ -14,14 +14,21 @@ NSString *const CacheData             = @"CacheData";
 
 @interface XCacheObject ()
 
-@property (nonatomic, strong) NSData *data;
-@property (nonatomic, strong) NSMutableDictionary *options;
+@property (nonatomic, strong, readwrite) NSData *data;
+@property (nonatomic, strong, readwrite) NSMutableDictionary *options;
 
 - (void)generateData:(NSData *)data Duration:(NSInteger)duration;
 
 @end
 
 @implementation XCacheObject
+
+- (NSMutableDictionary *)options {
+    if (!_options) {
+        _options = [[NSMutableDictionary alloc] init];
+    }
+    return _options;
+}
 
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
@@ -104,20 +111,12 @@ NSString *const CacheData             = @"CacheData";
 
 #pragma mark - tool
 
-//包装data
 - (void)generateData:(NSData *)data Duration:(NSInteger)duration {
     
-    //1. 字典
-    self.options = [NSMutableDictionary dictionary];
-    
-    //2. 对象超时的时刻
     duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
     [self.options setObject:@(duration) forKey:ExpirateTimestamp];
-    
-    //3. 保存缓存对象的NSData
     [self.options setObject:data forKey:CacheData];
     
-    //4. 将字典归档成NSData
     self.data = [NSKeyedArchiver archivedDataWithRootObject:self.options];
 }
 

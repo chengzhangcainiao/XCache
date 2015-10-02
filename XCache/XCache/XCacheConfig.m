@@ -12,6 +12,10 @@ static NSString *XCacheFolderName = @"XCacheObjects";
 
 @implementation XCacheConfig
 
++ (NSString *)rootFolderName {
+    return XCacheFolderName;
+}
+
 + (NSInteger)maxCacheOnMemoryTime {
     return 86400;//一天
 }
@@ -20,27 +24,34 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return 7 * 86400;//一周
 }
 
-+ (NSInteger)maxCacheOnMemorySize {
-    return 50 * 1024 *1024;//50M
-}
-
-+ (NSInteger)maxCacheOnDiskSize {
-    return 200 * 1024 *1024;//200M
-}
-
 + (NSInteger)defaultMaxQueueSize {
-    return 10;
+    return 20;
 }
 
 + (NSInteger)defaultMaxPoolSize {
     return 20;
 }
 
-+ (NSString *)rootFolderName {
-    return XCacheFolderName;
++ (NSInteger)maxCacheOnMemorySize {
+    return 100;
 }
 
-+ (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration {//当前时间+持续时间=过期时间
++ (NSInteger)maxCacheOnMemoryCost {
+    return 50 * 1024 *1024;//50M
+}
+
++ (NSInteger)maxCacheOnDiskCost {
+    return 200 * 1024 *1024;//200M
+}
+
++ (NSInteger)cycleArchiveTime {
+    return 10;
+}
+
+#pragma mark -
+
++ (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration {
+    // 过期时间 = 当前时间 + 持续时间
     duration = (duration > 0) ? duration : [self maxCacheOnMemoryTime];
     return [self nowTimestamp] + duration;
 }
