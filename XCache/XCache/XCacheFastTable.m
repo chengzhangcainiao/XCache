@@ -11,28 +11,49 @@
 
 @interface XCacheFastTable ()
 
-@property (nonatomic, strong) id<XCacheStrategyProtocol> cacheStrategy;
+@property (nonatomic, strong) id<XCacheExchangeStrategyProtocol> exchangeStrategyIns;
+@property (nonatomic, strong) id<XCacheSearchStrategyProtocol> searchStrategyIns;
 
 @end
 
 @implementation XCacheFastTable
 
-- (void)setupStrategy {
-    switch (_cachePolicy) {
-        case XCachePolicyLFU: {
-            _cacheStrategy = [XCacheStrategyFactory LFUWithTable:self];
+- (void)setupExchangeStrategy {
+    switch (_exchangeStrategyType) {
+        case XCacheExchangeStrategyFIFO: {
+            _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
             break;
         }
-        case XCachePolicyLRU: {
-            _cacheStrategy = [XCacheStrategyFactory LRUWithTable:self];
+
+        case XCacheExchangeStrategyLFU: {
+            _exchangeStrategyIns = [XCacheStrategyFactory LFUExchangeWithTable:self];
             break;
         }
-        case XCachePolicyFIFO: {
-            _cacheStrategy = [XCacheStrategyFactory FIFOWithTable:self];
+
+        case XCacheExchangeStrategyLRU: {
+            _exchangeStrategyIns = [XCacheStrategyFactory LRUExchangeWithTable:self];
+            break;
+        }
+
+        default: {
+            _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
+            break;
+        }
+    }
+}
+
+- (void)setupSearchStrategy {
+    switch (_searchStrategyType) {
+        case XCacheSearchStrategyNone: {
+            _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];
+            break;
+        }
+        case XCacheSearchStrategyMulLevelCache: {
+            _searchStrategyIns = [XCacheStrategyFactory mulLevelSearchWithTable:self];
             break;
         }
         default: {
-            _cacheStrategy = [XCacheStrategyFactory FIFOWithTable:self];
+            _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];
             break;
         }
     }
@@ -41,11 +62,11 @@
 #pragma mark - 
 
 - (XCacheObject *)getCacheObjectWithKey:(NSString *)key {
-    return [self.cacheStrategy searchWithKey:key];
+    return [self.searchStrategyIns searchWithKey:key];
 }
 
 - (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    [self.cacheStrategy cacheObject:object WithKey:key];
+    [self.exchangeStrategyIns cacheObject:object WithKey:key];
 }
 
 @end

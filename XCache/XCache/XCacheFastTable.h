@@ -12,33 +12,84 @@
 @class XCacheObject;
 
 /**
- *  Cache替换算法
+ *  Cache查找算法
  */
-typedef NS_ENUM(NSInteger, XCachePolicy){
-    /**
-     *  替换掉访问总次数最少的
-     */
-    XCachePolicyLFU             = 0x1,
+typedef NS_ENUM(NSInteger, XCacheSearchStrategy){
     
     /**
-     *  在某一个时间段内，替换换掉访问次数最少的
+     *  直接取字典按照key一个一个对比查找
      */
-     XCachePolicyLRU,
+    XCacheSearchStrategyNone            = 0x01,
+    
+    /**
+     *  使用二级临时内存缓存，提高命中
+     */
+    XCacheSearchStrategyMulLevelCache,
+    
+    /**
+     *  用户自定义
+     */
+    XCacheSearchStrategyCustomer,
+};
+
+/**
+ *  Cache替换算法
+ */
+typedef NS_ENUM(NSInteger, XCacheExchangeStrategy){
     
     /**
      *  先进先出类似队列
      */
-     XCachePolicyFIFO,
+    XCacheExchangeStrategyFIFO            = 0x01,
+    
+    /**
+     *  替换掉访问总次数最少的
+     */
+    XCacheExchangeStrategyLFU,
+    
+    /**
+     *  在某一个时间段内，替换换掉访问次数最少的
+     */
+    XCacheExchangeStrategyLRU,
+    
+    /**
+     *  用户自定义
+     */
+    XCacheExchangeStrategyCustomer,
 };
 
 @interface XCacheFastTable : NSObject
 
-@property (nonatomic, assign, readonly) XCachePolicy cachePolicy;
+@property (nonatomic, assign, readonly) XCacheExchangeStrategy exchangeStrategyType;
+@property (nonatomic, assign, readonly) XCacheSearchStrategy searchStrategyType;
 
-- (instancetype)initWithCachePolicy:(XCachePolicy)policy;
+/**
+ *  使用自定义替换算法
+ */
+- (void)registCustomerExchange:(id<XCacheExchangeStrategyProtocol>)exchange;
+
+/**
+ *  使用自定义查询算法
+ */
+- (void)registCustomerSearch:(id<XCacheSearchStrategyProtocol>)search;
+
+/**
+ *  保存所有缓存的key
+ */
+@property (nonatomic, strong) NSMutableArray *keyList;
+
+/**
+ *  保存所有缓存的key-value
+ */
+@property (nonatomic, strong) NSMutableDictionary *objectMap;
+
+/**
+ *  传入 查询策略 和 替换策略
+ */
+- (instancetype)initWithCacheExcangeStrategy:(XCacheExchangeStrategy)exchangeStrategy
+                         CacheSearchStrategy:(XCacheSearchStrategy)searchStrategy;
 
 - (XCacheObject *)getCacheObjectWithKey:(NSString *)key;
-
 - (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key;
 
 @end

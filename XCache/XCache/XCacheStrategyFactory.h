@@ -7,40 +7,51 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XCacheStrategyProtocol.h"
+#import "XCacheExchangeStrategyProtocol.h"
+#import "XCacheSearchStrategyProtocol.h"
 
 @class XCacheFastTable;
-@class XCacheFIFOPloicy;
-@class XCacheLRUPloicy;
-@class XCacheLFUPloicy;
 
 @interface XCacheStrategyFactory : NSObject
 
-+ (XCacheFIFOPloicy *)FIFOWithTable:(XCacheFastTable *)table;
-+ (XCacheLRUPloicy *)LRUWithTable:(XCacheFastTable *)table;
-+ (XCacheLFUPloicy *)LFUWithTable:(XCacheFastTable *)table;
++ (id<XCacheExchangeStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table;
++ (id<XCacheExchangeStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table;
++ (id<XCacheExchangeStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table;
+
++ (id<XCacheSearchStrategyProtocol>)normalSearchWithTable:(XCacheFastTable *)table;
++ (id<XCacheSearchStrategyProtocol>)mulLevelSearchWithTable:(XCacheFastTable *)table;
 
 @end
 
-@interface XCachePolicyBase : NSObject <XCacheStrategyProtocol>
+
+@interface XCacheExchangeStrategyBase : NSObject <XCacheExchangeStrategyProtocol>
 
 @property (nonatomic, strong) XCacheFastTable *table;
 
-@property (nonatomic, strong) NSMutableArray *keyArray;
-@property (nonatomic, strong) NSMutableDictionary *cacheObjectDictionary;
+@end
+
+@interface XCacheExchangeFIFOStrategy : XCacheExchangeStrategyBase
 
 @end
 
-@interface XCacheFIFOPloicy : XCachePolicyBase
+@interface XCacheExchangeLFUStrategy : XCacheExchangeStrategyBase
 
 @end
 
-@interface XCacheLRUPloicy : XCachePolicyBase
+@interface XCacheExchangeLRUStrategy : XCacheExchangeStrategyBase
 
 @end
 
-@interface XCacheLFUPloicy : XCachePolicyBase
+@interface XcacheSearchStrategyBase : NSObject <XCacheSearchStrategyProtocol>
+
+@property (nonatomic, strong) XCacheFastTable *table;
 
 @end
 
+@interface XcacheNoneSearchStrategy : XcacheSearchStrategyBase
 
+@end
+
+@interface XcacheMulLevelCacheSearchStrategy : XcacheSearchStrategyBase
+
+@end
