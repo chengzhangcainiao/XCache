@@ -23,6 +23,7 @@
 		214EA4371BB550CC009FDB78 /* XCacheQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4361BB550CC009FDB78 /* XCacheQueue.m */; };
 		214EA43A1BB550D6009FDB78 /* XCachePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA4391BB550D6009FDB78 /* XCachePool.m */; };
 		214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 214EA43C1BB55124009FDB78 /* XCacheObject.m */; };
+		215051F71BC65E040031CB73 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 215051F61BC65E040031CB73 /* Person.m */; };
 		21B1C3311BBE494A00DCD515 /* XCacheFastTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */; };
 		21B1C3321BBE494A00DCD515 /* XCacheFastTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */; };
 		21B1C3361BBE78CB00DCD515 /* XCacheStrategyFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */; };
@@ -75,6 +76,8 @@
 		214EA4391BB550D6009FDB78 /* XCachePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCachePool.m; sourceTree = "<group>"; };
 		214EA43B1BB55124009FDB78 /* XCacheObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheObject.h; sourceTree = "<group>"; };
 		214EA43C1BB55124009FDB78 /* XCacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheObject.m; sourceTree = "<group>"; };
+		215051F51BC65E040031CB73 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		215051F61BC65E040031CB73 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		21B1C32F1BBE494A00DCD515 /* XCacheFastTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheFastTable.h; sourceTree = "<group>"; };
 		21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheFastTable.m; sourceTree = "<group>"; };
 		21B1C3331BBE788B00DCD515 /* XCacheExchangeStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheExchangeStrategyProtocol.h; sourceTree = "<group>"; };
@@ -196,6 +199,8 @@
 				213AA97F1BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m */,
 				21EBCFE11BBED6B00043B8BF /* NSMutableArray+Queue.h */,
 				21EBCFE21BBED6B00043B8BF /* NSMutableArray+Queue.m */,
+				215051F51BC65E040031CB73 /* Person.h */,
+				215051F61BC65E040031CB73 /* Person.m */,
 			);
 			name = Lib;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 				214EA40F1BB54FC4009FDB78 /* ViewController.m in Sources */,
 				213AA9801BBBB1D300E54EF6 /* NSMutableDictionary+XCache.m in Sources */,
 				214EA40C1BB54FC4009FDB78 /* AppDelegate.m in Sources */,
+				215051F71BC65E040031CB73 /* Person.m in Sources */,
 				213AA97D1BBBB07A00E54EF6 /* NSMutableArray+XCache.m in Sources */,
 				214EA4341BB550C5009FDB78 /* XCacheConfig.m in Sources */,
 				214EA43D1BB55124009FDB78 /* XCacheObject.m in Sources */,

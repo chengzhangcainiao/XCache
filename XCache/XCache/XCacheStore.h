@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XCacheFastTable.h"
 
 /*
 参考MKNetworkKit队列缓存、ASimpleCache缓存
@@ -27,20 +28,36 @@
 5. 定期查看内存缓存，超过规定大小时，按照算法，将部分对象归档到磁盘文件.
 */
 
-@interface XCacheStore : NSCache <NSFastEnumeration>
+//@interface XCacheStore : NSCache <NSFastEnumeration>
+@interface XCacheStore : NSObject <NSFastEnumeration>
+
+@property (nonatomic, readonly) NSUInteger memorySize;
+@property (nonatomic, readonly) NSUInteger memoryTotalCost;
+@property (nonatomic, readonly) NSUInteger diskTotalCost;
+
+@property (nonatomic, strong, readonly) XCacheFastTable *fastTable;
 
 /**
- *  当前内存缓存对象总长度
+ *  保存所有缓存的key
  */
-@property (nonatomic, readonly) NSUInteger count;
+@property (nonatomic, strong) NSMutableArray *keyList;
 
 /**
- *  当前内存占用总大小
+ *  保存所有缓存的key-value
  */
-@property (nonatomic, readonly) NSUInteger totalCost;
+@property (nonatomic, strong) NSMutableDictionary *objectMap;
 
 + (instancetype)sharedInstance;
 
-- (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL **isStop))block;
+/**
+ *  更换其他类型的XCacheFastTable
+ */
+- (void)changeToFastTable:(XCacheFastTable *)aTable;
+
+- (void)saveObject:(id)object forKey:(NSString *)key;
+- (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration;
+- (void)loadObjectWithKey:(NSString *)key;
+
+- (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL *isStop))block;
 
 @end

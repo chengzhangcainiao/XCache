@@ -10,14 +10,12 @@
 #import "XCacheConfig.h"
 
 NSString *const ExpirateTimestamp     = @"ExpirateTimestamp";
-NSString *const CacheData             = @"CacheData";
+NSString *const TargetObject          = @"TargetObject";
 
 @interface XCacheObject ()
 
 @property (nonatomic, strong, readwrite) NSData *data;
 @property (nonatomic, strong, readwrite) NSMutableDictionary *options;
-
-- (void)generateData:(NSData *)data Duration:(NSInteger)duration;
 
 @end
 
@@ -33,16 +31,15 @@ NSString *const CacheData             = @"CacheData";
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        //内存永久保存，直到程序退出，内存释放
         _data = data;
     }
     return self;
 }
 
-- (instancetype)initWithData:(id)aData Duration:(NSInteger)duration {
+- (instancetype)initWithObject:(id)aObject Duration:(NSInteger)duration {
     self = [super init];
     if (self) {
-        [self generateData:aData Duration:duration];
+        [self generateDataWithObject:aObject Duration:duration];
     }
     return self;
 }
@@ -55,15 +52,15 @@ NSString *const CacheData             = @"CacheData";
     return _data.length;
 }
 
-- (id)dataInOptions {
-    if (!self.options) {
-        self.options = [NSKeyedUnarchiver unarchiveObjectWithData:self.data];
+- (id)targetObjectInOptions {
+    if (!_options) {
+        _options = [NSKeyedUnarchiver unarchiveObjectWithData:self.data];
     }
     
-    if ([[self.options allKeys] containsObject:CacheData] && \
-        [self.options objectForKey:CacheData])
+    if ([[self.options allKeys] containsObject:TargetObject] && \
+        [self.options objectForKey:TargetObject])
     {
-        return [self.options objectForKey:CacheData];
+        return [self.options objectForKey:TargetObject];
     }
     
     return nil;
@@ -111,12 +108,18 @@ NSString *const CacheData             = @"CacheData";
 
 #pragma mark - tool
 
-- (void)generateData:(NSData *)data Duration:(NSInteger)duration {
+- (void)generateDataWithObject:(id)aObject Duration:(NSInteger)duration {
     
+    //对象超时时间
     duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
-    [self.options setObject:@(duration) forKey:ExpirateTimestamp];
-    [self.options setObject:data forKey:CacheData];
     
+    //options字典保存超时时间
+    [self.options setObject:@(duration) forKey:ExpirateTimestamp];
+    
+    //options字典保存原始对象
+    [self.options setObject:aObject forKey:TargetObject];
+    
+    //将options字典归档为NSData
     self.data = [NSKeyedArchiver archivedDataWithRootObject:self.options];
 }
 

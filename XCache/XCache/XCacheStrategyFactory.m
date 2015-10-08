@@ -43,6 +43,27 @@
     return policy;
 }
 
++ (id<XCacheSearchStrategyProtocol>)normalSearchWithTable:(XCacheFastTable *)table {
+    static XcacheNoneSearchStrategy *policy = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        policy = [[XcacheNoneSearchStrategy alloc] init];
+        policy.table = table;
+    });
+    return policy;
+}
+
++ (id<XCacheSearchStrategyProtocol>)mulLevelSearchWithTable:(XCacheFastTable *)table {
+    static XcacheMulLevelCacheSearchStrategy *policy = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        policy = [[XcacheMulLevelCacheSearchStrategy alloc] init];
+        policy.table = table;
+    });
+    return policy;
+}
+
+
 @end
 
 @implementation XCacheExchangeStrategyBase

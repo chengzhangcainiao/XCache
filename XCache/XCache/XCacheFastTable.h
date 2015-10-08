@@ -10,6 +10,7 @@
 #import "XCacheStrategyFactory.h"
 
 @class XCacheObject;
+@class XCacheStore;
 
 /**
  *  Cache查找算法
@@ -74,20 +75,11 @@ typedef NS_ENUM(NSInteger, XCacheExchangeStrategy){
 - (void)registCustomerSearch:(id<XCacheSearchStrategyProtocol>)search;
 
 /**
- *  保存所有缓存的key
- */
-@property (nonatomic, strong) NSMutableArray *keyList;
-
-/**
- *  保存所有缓存的key-value
- */
-@property (nonatomic, strong) NSMutableDictionary *objectMap;
-
-/**
  *  传入 查询策略 和 替换策略
  */
 - (instancetype)initWithCacheExcangeStrategy:(XCacheExchangeStrategy)exchangeStrategy
-                         CacheSearchStrategy:(XCacheSearchStrategy)searchStrategy;
+                         CacheSearchStrategy:(XCacheSearchStrategy)searchStrategy
+                                  CacheStore:(XCacheStore *)store;
 
 - (XCacheObject *)getCacheObjectWithKey:(NSString *)key;
 - (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key;

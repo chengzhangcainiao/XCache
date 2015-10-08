@@ -20,7 +20,7 @@
 
 + (instancetype)sharedInstance;
 
-#pragma mark - normal
+#pragma mark - normal 【如果是自定义类对象，必须实现NSCoding协议】
 - (void)saveObject:(id)object ForKey:(NSString *)key;
 - (void)saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time;
 

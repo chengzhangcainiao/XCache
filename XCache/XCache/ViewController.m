@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "NSFileManager+XCache.h"
 #import "NSMutableDictionary+XCache.h"
+#import "Person.h"
 
 @interface ViewController ()
 
@@ -27,11 +28,21 @@
 //    NSString *path = @"/A";
 //    NSArray *arrays = [NSFileManager listItemsInDirectoryAtPath:path deep:NO];
 //    [NSFileManager moveItemAtPath:@"/A" toPath:@"/XXX" error:nil];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+   
+//    {
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionary] ;
+//
+//        Person *p = [[Person alloc] init];
+//        p.name = @"123";
+//        
+//        [dict setObject:p forKey:@"person"];
+//        
+//        
+//        NSString *filePath = [[NSFileManager pathForCachesDirectory] stringByAppendingPathComponent:@"test.plist"];
+//        
+//        [NSKeyedArchiver archiveRootObject:dict toFile:filePath];
+//    }
+    
 }
 
 @end

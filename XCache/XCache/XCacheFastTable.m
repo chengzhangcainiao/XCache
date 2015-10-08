@@ -8,17 +8,19 @@
 
 #import "XCacheFastTable.h"
 #import "XCacheObject.h"
+#import "XCacheStore.h"
 
 @interface XCacheFastTable ()
 
 @property (nonatomic, strong) id<XCacheExchangeStrategyProtocol> exchangeStrategyIns;
 @property (nonatomic, strong) id<XCacheSearchStrategyProtocol> searchStrategyIns;
+@property (nonatomic, strong) XCacheStore *store;
 
 @end
 
 @implementation XCacheFastTable
 
-- (void)setupExchangeStrategy {
+- (void)setupExchangeStrategy:(XCacheExchangeStrategy)strategy {
     switch (_exchangeStrategyType) {
         case XCacheExchangeStrategyFIFO: {
             _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
@@ -42,7 +44,7 @@
     }
 }
 
-- (void)setupSearchStrategy {
+- (void)setupSearchStrategy:(XCacheSearchStrategy)strategy {
     switch (_searchStrategyType) {
         case XCacheSearchStrategyNone: {
             _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];
@@ -57,6 +59,19 @@
             break;
         }
     }
+}
+
+- (instancetype)initWithCacheExcangeStrategy:(XCacheExchangeStrategy)exchangeStrategy
+                         CacheSearchStrategy:(XCacheSearchStrategy)searchStrategy
+                                  CacheStore:(XCacheStore *)store
+{
+    self = [super init];
+    if (self) {
+        [self setupSearchStrategy:searchStrategy];
+        [self setupExchangeStrategy:exchangeStrategy];
+        _store = store;
+    }
+    return self;
 }
 
 #pragma mark - 
