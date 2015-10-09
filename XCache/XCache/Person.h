@@ -11,5 +11,6 @@
 @interface Person : NSObject <NSCoding>
 
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) NSInteger age;
 
 @end

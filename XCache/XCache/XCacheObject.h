@@ -10,8 +10,20 @@
 
 @interface XCacheObject : NSObject
 
+/**
+ *  options字典Archiver后的NSData
+ */
 @property (nonatomic, strong, readonly) NSData *data;
+
+/**
+ *  包含原始对象和超时时间的字典
+ */
 @property (nonatomic, strong, readonly) NSMutableDictionary *options;
+
+/**
+ *  记录当前CacheObject对象被访问的次序
+ */
+@property (nonatomic, assign, readwrite) NSInteger visitOrder;
 
 /**
  *	从读取缓存原始对象
@@ -40,6 +52,11 @@
  *	更新缓存超时时间
  */
 - (void)updateCacheObjectLifeDuration:(NSInteger)duration;
+
+/**
+ *  使用新的原始对象和缓存超时，创建新的NSData
+ */
+- (void)generateDataWithObject:(id)aObject Duration:(NSInteger)duration;
 
 /**
  *	是否已经超时

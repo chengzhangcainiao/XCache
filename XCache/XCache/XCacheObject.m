@@ -8,6 +8,7 @@
 
 #import "XCacheObject.h"
 #import "XCacheConfig.h"
+#import "NSMutableDictionary+XCache.h"
 
 NSString *const ExpirateTimestamp     = @"ExpirateTimestamp";
 NSString *const TargetObject          = @"TargetObject";
@@ -31,6 +32,7 @@ NSString *const TargetObject          = @"TargetObject";
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
+        _visitOrder = 0;
         _data = data;
     }
     return self;
@@ -39,6 +41,7 @@ NSString *const TargetObject          = @"TargetObject";
 - (instancetype)initWithObject:(id)aObject Duration:(NSInteger)duration {
     self = [super init];
     if (self) {
+        _visitOrder = 0;
         [self generateDataWithObject:aObject Duration:duration];
     }
     return self;
@@ -101,7 +104,7 @@ NSString *const TargetObject          = @"TargetObject";
     
     if ([[self.options allKeys] containsObject:ExpirateTimestamp]) {
         duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
-        [self.options setObject:@(duration) forKey:ExpirateTimestamp];
+        [self.options safeSetObject:@(duration) forKey:ExpirateTimestamp];
     }
 }
 
@@ -114,10 +117,10 @@ NSString *const TargetObject          = @"TargetObject";
     duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
     
     //options字典保存超时时间
-    [self.options setObject:@(duration) forKey:ExpirateTimestamp];
+    [self.options safeSetObject:@(duration) forKey:ExpirateTimestamp];
     
     //options字典保存原始对象
-    [self.options setObject:aObject forKey:TargetObject];
+    [self.options safeSetObject:aObject forKey:TargetObject];
     
     //将options字典归档为NSData
     self.data = [NSKeyedArchiver archivedDataWithRootObject:self.options];

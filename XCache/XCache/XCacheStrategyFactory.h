@@ -27,6 +27,7 @@
 
 @interface XCacheExchangeStrategyBase : NSObject <XCacheExchangeStrategyProtocol>
 
+@property (nonatomic, strong) NSRecursiveLock *lock;
 @property (nonatomic, weak) XCacheFastTable *table;
 @property (nonatomic, weak) XCacheStore *store;
 

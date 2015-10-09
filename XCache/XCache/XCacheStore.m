@@ -26,15 +26,13 @@
 @property (nonatomic, copy) NSString                                *rootPath;
 
 @property (nonatomic, strong, readwrite) NSRecursiveLock            *lock;
-@property (nonatomic, strong, readwrite) XCacheFastTable            *fastTable;
-@property (nonatomic, assign, readwrite) NSUInteger                 memorySize;
-@property (nonatomic, assign, readwrite) NSUInteger                 memoryTotalCost;
-@property (nonatomic, assign, readwrite) NSUInteger                 diskTotalCost;
 
-- (void)readDiskCurrentTotalCost;
-- (void)archiverToDiskFile;
-- (void)startScheduleArchiver;
-- (void)startBackgroudTaskToArchiver;
+@property (nonatomic, strong, readwrite) XCacheFastTable            *fastTable;
+
+@property (nonatomic, assign, readwrite) NSInteger                 memorySize;
+@property (nonatomic, assign, readwrite) NSInteger                 memoryTotalCost;
+@property (nonatomic, assign, readwrite) NSInteger                 diskTotalCost;
+
 
 @end
 
@@ -93,7 +91,6 @@
 
 - (void)dealloc {
     [self.notificationCenter removeObserver:self];
-    [self archiverToDiskFile];
     self.lock = nil;
 }
 
@@ -123,8 +120,23 @@
 
 - (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration {
     
-    //创建一个用于包装原始对象的缓存对象
-    XCacheObject *cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
+    [self.lock lock];
+    
+    //先看这个key对应的XcacheObject实例有没有
+    XCacheObject *cacheObject = [self loadObjectWithKey:key];
+    
+    if (!cacheObject) {
+        //内存中不存在，创建一个新的XCacheObject实例，包装原始对象
+        cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
+    } else {
+        //替换传入的新的原始对象
+        [cacheObject generateDataWithObject:object Duration:duration];
+    }
+    
+    //记录当前新的内存大小
+    self.memoryTotalCost += [cacheObject cacheSize];
+    
+    [self.lock unlock];
     
     //判断当前是否，正在进行清理内存缓存对象 （如果是，就不把当前新的对象保存到内存，而直接写入本地，怕影响内存对象清理）
     if (_isArchivring) {
@@ -132,12 +144,7 @@
         [self dataWriteToRootFolderWithKey:key Data:cacheObject.data];
     } else {
         //使用内存保存
-//        [self.objectMap setObject:cacheObject forKey:key];
-//        self.memorySize += [cacheObject cacheSize];
-        
-        [self.lock lock];
         [_fastTable setCacheObject:object WithKey:key];
-        [self.lock unlock];
     }
 }
 
@@ -188,45 +195,15 @@
 #pragma mark - 
 
 - (void)addObserveNotifications {
-    [self.notificationCenter addObserver:self selector:@selector(cleaningCachedObjects) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    [self.notificationCenter addObserver:self selector:@selector(cleaningCachedObjects)
+                                    name:UIApplicationDidReceiveMemoryWarningNotification
+                                  object:nil];
 }
 
 - (void)cleaningCachedObjects {
-    //
     
-    [self archiverToDiskFile];
-}
-
-- (void)archiverToDiskFile {
-    
-    if (_isArchivring) {
-        return;
-    }
-
-    
-    [self.lock lock];
-    
-    //开启一个后台任务，归档对象到磁盘文件
-    [self startBackgroudTaskToArchiver];
-    
-    [self.lock unlock];
-}
-
-- (void)startScheduleArchiver {
-    //1. 新建一个子线程
-    //2. open runloop
-    //3. NSTimer计时
-    //4. 归档对象
-}
-
-- (void)startBackgroudTaskToArchiver {
-
-    _isArchivring = YES;
-    
-    //后台子线程归档对象到磁盘文件
-    //...
-    
-    _isArchivring = NO;
+    //接收到内存警告时，清理内存对象，包归档到磁盘文件
+    [_fastTable cleaningCacheObjectsInMomery:NO];
 }
 
 - (void)readDiskCurrentTotalCost {//读取磁盘缓存文件大小

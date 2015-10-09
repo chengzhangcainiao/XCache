@@ -29,6 +29,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+        
     
 //    NSString *path = [NSFileManager pathForRootDirectoryWithPath:@"ccc"];
 //    NSString *path = @"/dawd/dawdaw/ccc";//默认在document/dawd/dawdaw/ccc
@@ -55,12 +57,32 @@
     }
      */
     
-    {
-        Person *p = [[Person alloc] init];
-        p.name = @"123";
-        
-        [self.cache saveObject:p ForKey:@"person1" Timeout:0];
-    }
+//    {
+//        Person *p = [[Person alloc] init];
+//        p.name = @"123";
+//        
+//        [self.cache saveObject:p ForKey:@"person1" Timeout:0];
+//    }
+    
+//    {
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionary] ;
+//        
+//        for (int i = 0; i < 4; i++) {
+//            Person *p = [[Person alloc] init];
+//            p.age = 5 - i;
+//            
+//            [dict setObject:p forKey:[NSString stringWithFormat:@"%d", 5 - i]];
+//        }
+//        
+//        //由字典获得所有value的无序数组
+//        NSArray *targets = [dict allValues];
+//        
+//        //从大到小
+//        NSArray *results = [targets sortedArrayUsingComparator:^NSComparisonResult(Person *p1, Person *p2) {
+//            return (NSComparisonResult)MIN(1, MAX(-1, p1.age - p2.age));
+//        }];
+//        
+//    }
     
 }
 

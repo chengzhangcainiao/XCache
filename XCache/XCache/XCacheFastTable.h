@@ -85,5 +85,6 @@ typedef NS_ENUM(NSInteger, XCacheExchangeStrategy){
 
 - (XCacheObject *)getCacheObjectWithKey:(NSString *)key;
 - (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key;
+- (void)cleaningCacheObjectsInMomery:(BOOL)flag;
 
 @end

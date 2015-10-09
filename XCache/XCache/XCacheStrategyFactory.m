@@ -7,8 +7,10 @@
 //
 
 #import "XCacheStrategyFactory.h"
+#import <Availability.h>
 #import "NSMutableArray+Queue.h"
 #import "NSFileManager+XCache.h"
+#import "NSMutableDictionary+XCache.h"
 #import "XCacheFastTable.h"
 #import "XCacheConfig.h"
 #import "XCacheStore.h"
@@ -68,13 +70,24 @@
 
 @end
 
+#pragma mark -
+
 @implementation XCacheExchangeStrategyBase
+
+- (NSRecursiveLock *)lock {
+    if (!_lock) {
+        _lock = [[NSRecursiveLock alloc] init];
+    }
+    return _lock;
+}
 
 - (XCacheStore *)store {
     return self.table.store;
 }
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
+
+- (void)cleaningCacheObjects:(BOOL)keepAlive {}
 
 @end
 
@@ -105,6 +118,8 @@
 
 @end
 
+
+
 @implementation XCacheExchangeLFUStrategy
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
@@ -113,10 +128,81 @@
 
 @end
 
+/**
+ *  LRU替换缓存对象
+ */
+@interface XCacheExchangeLRUStrategy ()
+
+/**
+ *  循环记录当前访问缓存对象的总次数
+ */
+@property (nonatomic, assign)NSInteger currentVisitCount;
+
+@end
+
 @implementation XCacheExchangeLRUStrategy
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _currentVisitCount = 0;
+    }
+    return self;
+}
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
+    [self.lock lock];
+    
+    // 保存到store的objectMap字典
+    [self.store.objectMap safeSetObject:object forKey:key];
+    
+    // 让当前访问缓存的总次数赋值给缓存对象的保存，方便后续排除最少访问次数的缓存对象
+    object.visitOrder = _currentVisitCount++;
+    
+    // 循环处理_currentVisitCount
+    if (_currentVisitCount < 0) {
+        [self recycleCurrentVisitCount];
+    }
+    
+    [self.lock unlock];
+    
+    //按照LRU替换算法，清理内存对象
+    [self cleaningCacheObjects:YES];
+}
+
+- (void)cleaningCacheObjects:(BOOL)keepAlive {
+    [self.lock lock];
+    
+    //当前被缓存的所有key
+    NSMutableArray *keys = [[self.store objectMap] mutableCopy];
+    
+    //规定最大缓存个数 与 当前内存缓存的最大个数
+    NSInteger maxCount = [XCacheConfig maxCacheOnMemorySize];
+    NSInteger totalCount = [[self.store objectMap] count];
+    
+    //规定的最大内存花销 与 当前内存的花销
+    NSInteger totalCost = self.store.memoryTotalCost;
+    NSInteger maxCost = [XCacheConfig maxCacheOnMemoryCost];
+    
+    
+    
+    
+    [self.lock unlock];
+}
+
+- (void)recycleCurrentVisitCount {
+    
+    //遍历objectMap保存的CacheObject实例，按照visitOrder从小到大排序
+    NSArray *resultArray = [[self.store.objectMap allValues] sortedArrayUsingComparator:^NSComparisonResult(XCacheObject *obj1, XCacheObject *obj2) {
+        return (NSComparisonResult)MIN(1, MAX(-1, obj1.visitOrder - obj2.visitOrder));
+    }];
+    
+    //重新从0开始赋值CacheObject实例的visitOrder
+    NSInteger index = 0;
+    for (XCacheObject *object in resultArray) {
+        object.visitOrder = index++;
+    }
 }
 
 @end
@@ -140,7 +226,9 @@
     if ([[self.store.objectMap allKeys] containsObject:key]) {
         
         //内存中查找到XCacheObejct实例
-        return [[XCacheObject alloc] initWithData:[self.store.objectMap objectForKey:key]];
+        XCacheObject *finded = [self.store.objectMap objectForKey:key];
+        NSData *data = [finded cacheData];
+        return [[XCacheObject alloc] initWithData:data];
         
     } else {
         

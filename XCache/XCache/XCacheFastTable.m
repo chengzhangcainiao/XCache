@@ -83,4 +83,8 @@
     [self.exchangeStrategyIns cacheObject:object WithKey:key];
 }
 
+- (void)cleaningCacheObjectsInMomery:(BOOL)flag {
+    [self.exchangeStrategyIns cleaningCacheObjects:flag];
+}
+
 @end

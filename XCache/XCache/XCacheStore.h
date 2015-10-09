@@ -34,17 +34,17 @@
 /**
  *  内存当前保存的XCacheObject实例长度
  */
-@property (nonatomic, readonly) NSUInteger memorySize;
+@property (nonatomic, readonly) NSInteger memorySize;
 
 /**
  *  当前内存花销的总大小
  */
-@property (nonatomic, readonly) NSUInteger memoryTotalCost;
+@property (nonatomic, readonly) NSInteger memoryTotalCost;
 
 /**
  *  当前磁盘花销的总大小
  */
-@property (nonatomic, readonly) NSUInteger diskTotalCost;
+@property (nonatomic, readonly) NSInteger diskTotalCost;
 
 /**
  *  对应进行算法逻辑的类
