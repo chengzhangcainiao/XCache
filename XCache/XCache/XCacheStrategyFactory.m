@@ -7,9 +7,12 @@
 //
 
 #import "XCacheStrategyFactory.h"
+#import "NSMutableArray+Queue.h"
+#import "NSFileManager+XCache.h"
 #import "XCacheFastTable.h"
 #import "XCacheConfig.h"
-#import "NSMutableArray+Queue.h"
+#import "XCacheStore.h"
+#import "XCacheObject.h"
 
 @implementation XCacheStrategyFactory
 
@@ -63,10 +66,13 @@
     return policy;
 }
 
-
 @end
 
 @implementation XCacheExchangeStrategyBase
+
+- (XCacheStore *)store {
+    return self.table.store;
+}
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
 
@@ -93,10 +99,6 @@
     _keyQueue = nil;
 }
 
-- (XCacheObject *)searchWithKey:(NSString *)key {
-    return nil;
-}
-
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
 }
@@ -105,10 +107,6 @@
 
 @implementation XCacheExchangeLFUStrategy
 
-- (XCacheObject *)searchWithKey:(NSString *)key {
-    return nil;
-}
-
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
 }
@@ -116,10 +114,6 @@
 @end
 
 @implementation XCacheExchangeLRUStrategy
-
-- (XCacheObject *)searchWithKey:(NSString *)key {
-    return nil;
-}
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
@@ -131,6 +125,10 @@
 
 @implementation XcacheSearchStrategyBase
 
+- (XCacheStore *)store {
+    return self.table.store;
+}
+
 - (XCacheObject *)searchWithKey:(NSString *)key {return nil;}
 
 @end
@@ -138,8 +136,40 @@
 @implementation XcacheNoneSearchStrategy
 
 - (XCacheObject *)searchWithKey:(NSString *)key {
-    //具体实现
-    return nil;
+    
+    if ([[self.store.objectMap allKeys] containsObject:key]) {
+        
+        //内存中查找到XCacheObejct实例
+        return [[XCacheObject alloc] initWithData:[self.store.objectMap objectForKey:key]];
+        
+    } else {
+        
+        //从本地文件查找
+        NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
+        
+        if ([NSFileManager existsItemAtPath:filePath]) {
+            
+            //本地文件找到
+            NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
+            XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
+            
+            //判断是否载入到内存
+            if ([self.store isCanLoadCacheObjectToMemory]) {
+                
+                //以默认的内存最大缓存时间，保存到内存字典
+                [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
+                
+                //移除本地文件
+                [NSFileManager removeItemAtPath:filePath];
+            }
+            
+            return objectFinded;
+            
+        } else {
+            //本地文件未找到
+            return nil;
+        }
+    }
 }
 
 @end

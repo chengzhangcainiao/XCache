@@ -31,10 +31,24 @@
 //@interface XCacheStore : NSCache <NSFastEnumeration>
 @interface XCacheStore : NSObject <NSFastEnumeration>
 
+/**
+ *  内存当前保存的XCacheObject实例长度
+ */
 @property (nonatomic, readonly) NSUInteger memorySize;
+
+/**
+ *  当前内存花销的总大小
+ */
 @property (nonatomic, readonly) NSUInteger memoryTotalCost;
+
+/**
+ *  当前磁盘花销的总大小
+ */
 @property (nonatomic, readonly) NSUInteger diskTotalCost;
 
+/**
+ *  对应进行算法逻辑的类
+ */
 @property (nonatomic, strong, readonly) XCacheFastTable *fastTable;
 
 /**
@@ -47,6 +61,9 @@
  */
 @property (nonatomic, strong) NSMutableDictionary *objectMap;
 
+/**
+ *  获取单例
+ */
 + (instancetype)sharedInstance;
 
 /**
@@ -54,10 +71,44 @@
  */
 - (void)changeToFastTable:(XCacheFastTable *)aTable;
 
-- (void)saveObject:(id)object forKey:(NSString *)key;
+/**
+ *  使用key保存一个原始对象，并传入超时时间
+ */
 - (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration;
-- (void)loadObjectWithKey:(NSString *)key;
 
+/**
+ *  使用一个key，查找到一个XCacheObject实例，继而找到原始对象
+ */
+- (XCacheObject *)loadObjectWithKey:(NSString *)key;
+
+/**
+ *  删除某一个key文件
+ */
+- (void)removeDiskCacheFileWithKey:(NSString *)key;
+
+/**
+ *  将本地保存的缓存文件删除到规定大小
+ */
+- (void)removeDiskCacheFilesOevrlessRoleSize;
+
+/**
+ *  删除本地所有缓存文件
+ */
+- (void)removeAllDiskCacheFiles;
+
+/**
+ *  遍历所有key和value
+ */
 - (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL *isStop))block;
+
+/**
+ *  清理内存对象，将超过规定大小的对象，归档到本地文件
+ */
+- (void)cleaningCachedObjects;
+
+/**
+ *  判断是否可以将XCacheObject实例载入到内存，判断内存大小是否超过规定大小
+ */
+- (BOOL)isCanLoadCacheObjectToMemory;
 
 @end

@@ -14,7 +14,6 @@
 
 @property (nonatomic, strong) id<XCacheExchangeStrategyProtocol> exchangeStrategyIns;
 @property (nonatomic, strong) id<XCacheSearchStrategyProtocol> searchStrategyIns;
-@property (nonatomic, strong) XCacheStore *store;
 
 @end
 

@@ -61,6 +61,8 @@ typedef NS_ENUM(NSInteger, XCacheExchangeStrategy){
 
 @interface XCacheFastTable : NSObject
 
+@property (nonatomic, weak, readwrite) XCacheStore *store;
+
 @property (nonatomic, assign, readonly) XCacheExchangeStrategy exchangeStrategyType;
 @property (nonatomic, assign, readonly) XCacheSearchStrategy searchStrategyType;
 

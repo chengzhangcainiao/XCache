@@ -10,6 +10,7 @@
 #import "XCacheExchangeStrategyProtocol.h"
 #import "XCacheSearchStrategyProtocol.h"
 
+@class XCacheStore;
 @class XCacheFastTable;
 
 @interface XCacheStrategyFactory : NSObject
@@ -26,7 +27,8 @@
 
 @interface XCacheExchangeStrategyBase : NSObject <XCacheExchangeStrategyProtocol>
 
-@property (nonatomic, strong) XCacheFastTable *table;
+@property (nonatomic, weak) XCacheFastTable *table;
+@property (nonatomic, weak) XCacheStore *store;
 
 @end
 
@@ -44,7 +46,8 @@
 
 @interface XcacheSearchStrategyBase : NSObject <XCacheSearchStrategyProtocol>
 
-@property (nonatomic, strong) XCacheFastTable *table;
+@property (nonatomic, weak) XCacheFastTable *table;
+@property (nonatomic, weak) XCacheStore *store;
 
 @end
 

@@ -16,8 +16,8 @@
 
 #pragma makr - Path
 
-//判断传入的全路径是否符合六种全路径
-+(void)assertPath:(NSString *)path;
+//判断传入的全路径是系统中的六种路径（document、library、cache、temp、appsuport、mainBundle）下的子路径
++(BOOL)assertPath:(NSString *)path;
 +(NSMutableArray *)absoluteDirectories;
 +(NSString *)absoluteDirectoryForPath:(NSString *)path;
 +(NSString *)absolutePath:(NSString *)path;//帮助修正传入的路径是不存在的路径
@@ -54,8 +54,36 @@
 +(BOOL)createFileAtPath:(NSString *)path withContent:(NSObject *)content;
 +(BOOL)createFileAtPath:(NSString *)path withContent:(NSObject *)content error:(NSError **)error;
 
+#pragma mark - 移动
+
 +(BOOL)moveItemAtPath:(NSString *)path toPath:(NSString *)toPath;
 +(BOOL)moveItemAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
+
+#pragma mark - 删除
+
+//直接删除目录下的所有文件
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path;
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path error:(NSError **)error;
+
+//直接删除目录下的文件扩展名对应的文件
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension;
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension error:(NSError **)error;
+
+//直接删除目录下的文件名前缀对应的文件
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix;
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix error:(NSError **)error;
+
+//直接删除目录下的文件名后缀对应的文件
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix;
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix error:(NSError **)error;
+
+//直接删除目录下的文件or文件夹
++(BOOL)removeItemsInDirectoryAtPath:(NSString *)path;
++(BOOL)removeItemsInDirectoryAtPath:(NSString *)path error:(NSError **)error;
+
+//直接删除目录下某个项
++(BOOL)removeItemAtPath:(NSString *)path;
++(BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error;
 
 #pragma mark - 是否存在、是否是文件夹、是否是文件
 

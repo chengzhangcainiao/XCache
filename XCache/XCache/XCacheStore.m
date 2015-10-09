@@ -8,8 +8,12 @@
 
 #import "XCacheStore.h"
 #import <UIKit/UIApplication.h>
-#import "XCacheObject.h"
+
 #import "NSFileManager+XCache.h"
+
+#import "XCacheObject.h"
+#import "XCacheConfig.h"
+
 
 @interface XCacheStore () {
     
@@ -28,7 +32,6 @@
 @property (nonatomic, assign, readwrite) NSUInteger                 diskTotalCost;
 
 - (void)readDiskCurrentTotalCost;
-- (void)cleaningCachedObjects;
 - (void)archiverToDiskFile;
 - (void)startScheduleArchiver;
 - (void)startBackgroudTaskToArchiver;
@@ -120,25 +123,47 @@
 
 - (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration {
     
-    //1. 创建一个用于包装原始对象的缓存对象
+    //创建一个用于包装原始对象的缓存对象
     XCacheObject *cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
     
-    if (_isArchivring) {//正在清理内存缓存对象，所以就不把当前新的对象保存到内存，而直接写入本地
+    //判断当前是否，正在进行清理内存缓存对象 （如果是，就不把当前新的对象保存到内存，而直接写入本地，怕影响内存对象清理）
+    if (_isArchivring) {
         //写入本地文件
-        [cacheObject.data writeToFile:[self getAbsoluteFilePathWithName:key] atomically:YES];
+        [self dataWriteToRootFolderWithKey:key Data:cacheObject.data];
     } else {
         //使用内存保存
-        [self.objectMap setObject:cacheObject forKey:key];
-        self.memorySize += [cacheObject cacheSize];
+//        [self.objectMap setObject:cacheObject forKey:key];
+//        self.memorySize += [cacheObject cacheSize];
+        
+        [self.lock lock];
+        [_fastTable setCacheObject:object WithKey:key];
+        [self.lock unlock];
     }
-    
-    [self.lock lock];
-    [_fastTable setCacheObject:object WithKey:key];
-    [self.lock unlock];
 }
 
-- (void)loadObjectWithKey:(NSString *)key {
-    [_fastTable getCacheObjectWithKey:key];
+- (XCacheObject *)loadObjectWithKey:(NSString *)key {
+    return [_fastTable getCacheObjectWithKey:key];
+}
+
+#pragma mark - 
+
+- (void)removeDiskCacheFileWithKey:(NSString *)key {
+    NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
+    
+    BOOL isExist = [NSFileManager isFileItemAtPath:filePath];
+    
+    if (isExist) {
+        [NSFileManager removeItemAtPath:filePath error:nil];
+    }
+}
+
+- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data {
+    
+    //1. 先删除存在的文件
+    [self removeDiskCacheFileWithKey:key];
+    
+    //2. 再将内容写入到新的文件
+    [data writeToFile:[NSFileManager pathForRootDirectoryWithPath:key] atomically:YES];
 }
 
 #pragma mark - 
@@ -167,7 +192,7 @@
 }
 
 - (void)cleaningCachedObjects {
-    //...
+    //
     
     [self archiverToDiskFile];
 }
@@ -208,8 +233,18 @@
     
 }
 
-- (NSString *)getAbsoluteFilePathWithName:(NSString *)name {
-    return [self.rootPath stringByAppendingPathComponent:name];
+- (BOOL)isCanLoadCacheObjectToMemory {
+    
+    //当前不能进行内存清理
+    BOOL flag1 = !_isArchivring;
+    
+    //设置了内存最大花销
+    BOOL flag2 = [XCacheConfig maxCacheOnMemoryCost] > 0;
+
+    //当当前内存花销 < 设置的最大内存花销
+    BOOL flag3 = self.memoryTotalCost < [XCacheConfig maxCacheOnMemoryCost];
+    
+    return flag1 && flag2 && flag3;
 }
 
 @end

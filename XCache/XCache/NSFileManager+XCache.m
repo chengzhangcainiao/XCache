@@ -115,7 +115,9 @@
 
 +(NSString *)absolutePath:(NSString *)path
 {
-    [self assertPath:path];
+    if (![self assertPath:path]) {
+        return nil;
+    }
     
     NSString *finalPath = nil;
     NSString *defaultDirectory = [self absoluteDirectoryForPath:path];
@@ -130,10 +132,13 @@
 }
 
 
-+(void)assertPath:(NSString *)path
++(BOOL)assertPath:(NSString *)path
 {
-    NSAssert(path != nil, @"Invalid path. Path cannot be nil.");
-    NSAssert(![path isEqualToString:@""], @"Invalid path. Path cannot be empty string.");
+    if (!path || [path isEqualToString:@""]) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 +(NSString *)pathForRootDirectory {
@@ -584,6 +589,96 @@
     //2. 移动目录内容
     BOOL isMove = [[NSFileManager defaultManager] moveItemAtPath:[self absolutePath:path] toPath:[self absolutePath:toPath] error:error];
     return (isCreate && isMove);
+}
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path] error:nil];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path error:(NSError **)error
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path] error:error];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withExtension:extension] error:nil];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension error:(NSError **)error
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withExtension:extension] error:error];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withPrefix:prefix] error:nil];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix error:(NSError **)error
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withPrefix:prefix] error:error];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withSuffix:suffix] error:nil];
+}
+
+
++(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix error:(NSError **)error
+{
+    return [self removeItemsAtPaths:[self listFilesInDirectoryAtPath:path withSuffix:suffix] error:error];
+}
+
+
++(BOOL)removeItemsInDirectoryAtPath:(NSString *)path
+{
+    return [self removeItemsInDirectoryAtPath:path error:nil];
+}
+
+
++(BOOL)removeItemsInDirectoryAtPath:(NSString *)path error:(NSError **)error
+{
+    return [self removeItemsAtPaths:[self listItemsInDirectoryAtPath:path deep:NO] error:error];
+}
+
+
++(BOOL)removeItemAtPath:(NSString *)path
+{
+    return [self removeItemAtPath:path error:nil];
+}
+
+
++(BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error
+{
+    return [[NSFileManager defaultManager] removeItemAtPath:[self absolutePath:path] error:error];
+}
+
+
++(BOOL)removeItemsAtPaths:(NSArray *)paths
+{
+    return [self removeItemsAtPaths:paths error:nil];
+}
+
+
++(BOOL)removeItemsAtPaths:(NSArray *)paths error:(NSError **)error
+{
+    BOOL success = YES;
+    
+    for(NSString *path in paths)
+    {
+        success &= [self removeItemAtPath:[self absolutePath:path] error:error];
+    }
+    
+    return success;
 }
 
 + (NSString *)readFileAsStringWithPath:(NSString *)path {
