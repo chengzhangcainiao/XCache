@@ -25,8 +25,9 @@
 
 + (NSString *)getRootFolderPath {
     NSString *documentsDirectory = [self pathForDocumentsDirectory];
-    NSString *rootPath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, [self rootFolder]];
-    return rootPath;
+//    NSString *rootPath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, [self rootFolder]];
+//    return rootPath;
+    return documentsDirectory;
 }
 
 + (NSString *)getRootFolderPathForFile:(NSString *)fileName

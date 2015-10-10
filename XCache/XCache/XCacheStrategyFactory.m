@@ -154,9 +154,6 @@
     
     [self.lock lock];
     
-    // 保存到store的objectMap字典
-    [self.store.objectMap safeSetObject:object forKey:key];
-    
     // 让当前访问缓存的总次数赋值给缓存对象的保存，方便后续排除最少访问次数的缓存对象
     object.visitOrder = _currentVisitCount++;
     
@@ -218,7 +215,7 @@
             
             //判断是否写入磁盘文件
             if (isArchive) {
-//                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
+                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
             }
             
             //从内存删除

@@ -10,6 +10,7 @@
 #import <UIKit/UIApplication.h>
 
 #import "NSFileManager+XCache.h"
+#import "NSMutableDictionary+XCache.h"
 
 #import "XCacheObject.h"
 #import "XCacheConfig.h"
@@ -137,6 +138,7 @@
     } else {
         //替换传入的新的原始对象
         [cacheObject generateDataWithObject:object Duration:duration];
+        self.memoryTotalCost -= [cacheObject cacheSize];
     }
     
     //记录当前新的内存大小
@@ -150,6 +152,8 @@
         [self dataWriteToRootFolderWithKey:key Data:cacheObject.data];
     } else {
         //使用内存保存
+        [self.objectMap safeSetObject:cacheObject forKey:key];
+        self.memorySize++;
         [_fastTable setCacheObject:cacheObject WithKey:key];
     }
 }
