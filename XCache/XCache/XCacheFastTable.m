@@ -20,6 +20,8 @@
 @implementation XCacheFastTable
 
 - (void)setupExchangeStrategy:(XCacheExchangeStrategy)strategy {
+    _exchangeStrategyType = strategy;
+    
     switch (_exchangeStrategyType) {
         case XCacheExchangeStrategyFIFO: {
             _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
@@ -44,6 +46,8 @@
 }
 
 - (void)setupSearchStrategy:(XCacheSearchStrategy)strategy {
+    _searchStrategyType = strategy;
+    
     switch (_searchStrategyType) {
         case XCacheSearchStrategyNone: {
             _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];

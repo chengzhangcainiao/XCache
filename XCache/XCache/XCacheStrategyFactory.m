@@ -160,10 +160,10 @@
     // 让当前访问缓存的总次数赋值给缓存对象的保存，方便后续排除最少访问次数的缓存对象
     object.visitOrder = _currentVisitCount++;
     
-    // 循环处理_currentVisitCount
-    if (_currentVisitCount < 0) {
+    // 循环处理_currentVisitCount，防止数字过大
+//    if (_currentVisitCount < 0) {
         [self recycleCurrentVisitCount];
-    }
+//    }
     
     [self.lock unlock];
     
@@ -175,7 +175,7 @@
     [self.lock lock];
     
     //保存当前遍历的缓存项的keys
-    NSMutableArray *keys = [[self.store objectMap] mutableCopy];
+    NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
     
     //规定最大缓存个数 与 当前内存缓存的最大个数
     NSInteger maxCount = [XCacheConfig maxCacheOnMemorySize];
@@ -218,7 +218,7 @@
             
             //判断是否写入磁盘文件
             if (isArchive) {
-                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
+//                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
             }
             
             //从内存删除
@@ -243,6 +243,9 @@
     for (XCacheObject *object in resultArray) {
         object.visitOrder = index++;
     }
+    
+    //重新赋值循环处理后的最大的index
+    _currentVisitCount = index;
 }
 
 @end

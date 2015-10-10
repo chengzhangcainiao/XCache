@@ -7,11 +7,11 @@
 //
 
 #import "XCache.h"
-#import "XCacheStore.h"
+//#import "XCacheStore.h"
 
 @interface XCache ()
 
-@property (nonatomic, strong) XCacheStore *store;
+@property (nonatomic, strong, readwrite) XCacheStore *store;
 
 @end
 
@@ -45,11 +45,17 @@
     if (!object || [object isEqual:[NSNull null]] || !key || [key isEqualToString:@""]) {
         return;
     }
+    
     [self.store saveObject:object forKey:key expiredAfter:time];
+    
 }
 
 - (id)getObjectWithKey:(NSString *)key {
     return [self.store loadObjectWithKey:key];
+}
+
+- (void)removeObjectWithKey:(NSString *)key {
+    [self.store removeCacheObjectWithKey:key];
 }
 
 @end

@@ -82,14 +82,19 @@
 - (XCacheObject *)loadObjectWithKey:(NSString *)key;
 
 /**
- *  清理内存对象，直到当前缓存内存小于默认大小，对象归档到磁盘文件
+ *  使用key移除内存缓存项
  */
-- (void)cleaningCachedObjects;
+- (void)removeCacheObjectWithKey:(NSString *)key;
 
 /**
  *  强制删除当前内存缓存的所有对象
  */
 - (void)removeAllCachedObjects;
+
+/**
+ *  清理内存对象，直到当前缓存内存小于默认大小，对象归档到磁盘文件
+ */
+- (void)cleaningCachedObjects;
 
 /**
  *  判断是否可以将XCacheObject实例载入到内存，判断内存大小是否超过规定大小

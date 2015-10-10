@@ -23,7 +23,7 @@
 /**
  *  记录当前CacheObject对象被访问的次序
  */
-@property (nonatomic, assign, readwrite) NSInteger visitOrder;
+@property (nonatomic, assign) NSInteger visitOrder;
 
 /**
  *	从读取缓存原始对象

@@ -150,12 +150,16 @@
         [self dataWriteToRootFolderWithKey:key Data:cacheObject.data];
     } else {
         //使用内存保存
-        [_fastTable setCacheObject:object WithKey:key];
+        [_fastTable setCacheObject:cacheObject WithKey:key];
     }
 }
 
 - (XCacheObject *)loadObjectWithKey:(NSString *)key {
     return [_fastTable getCacheObjectWithKey:key];
+}
+
+- (void)removeCacheObjectWithKey:(NSString *)key {
+    [self removeMemoryCacheObject:nil WithKey:key];
 }
 
 #pragma mark - 
@@ -171,13 +175,21 @@
 
 - (void)removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key {
     [self.lock lock];
+    
     if (!(self.memorySize == 0)) {
         self.memorySize--;
     }
+    
+    if (!cacheObj) {
+        cacheObj = [self.objectMap objectForKey:key];
+    }
+    
     if (!(self.memoryTotalCost == 0)) {
         self.memoryTotalCost -= [cacheObj cacheSize];
     }
+    
     [self.objectMap removeObjectForKey:key];
+    
     [self.lock unlock];
 }
 
@@ -235,8 +247,6 @@
         return;
     }
     
-    [self.lock lock];
-    
     _isArchivring = YES;
     
     NSArray *keys = [self.objectMap allKeys];
@@ -254,8 +264,6 @@
     [self resetMemoryRecord];
     
     _isArchivring = NO;
-    
-    [self.lock unlock];
 }
 
 - (void)readDiskCurrentTotalCost {//读取磁盘缓存文件大小

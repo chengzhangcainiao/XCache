@@ -24,7 +24,7 @@
 #pragma mark - Path
 
 + (NSString *)getRootFolderPath {
-    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *documentsDirectory = [self pathForDocumentsDirectory];
     NSString *rootPath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, [self rootFolder]];
     return rootPath;
 }

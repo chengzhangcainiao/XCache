@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-//#import "NSFileManager+XCache.h"
+#import "NSFileManager+XCache.h"
 //#import "NSMutableDictionary+XCache.h"
 #import "Person.h"
 #import "XCache.h"
@@ -30,7 +30,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-        
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setBackgroundColor:[UIColor grayColor]];
+    btn.frame = CGRectMake(20, 100, 150, 60);
+    [self.view addSubview:btn];
+    
+    [btn addTarget:self action:@selector(testCache) forControlEvents:UIControlEventTouchUpInside];
     
 //    NSString *path = [NSFileManager pathForRootDirectoryWithPath:@"ccc"];
 //    NSString *path = @"/dawd/dawdaw/ccc";//默认在document/dawd/dawdaw/ccc
@@ -84,11 +89,36 @@
 //        
 //    }
     
-    {
-        NSMutableDictionary *dict = [@{} mutableCopy];
-        [dict removeObjectForKey:nil];
-    }
+//    {
+//        NSMutableDictionary *dict = [@{} mutableCopy];
+//        [dict removeObjectForKey:nil];
+//    }
+
+}
+
+- (void)testCache {
     
+//    NSString *rootPath = [NSFileManager pathForRootDirectory];
+    
+//    {
+//        Person *p = [[Person alloc] init];
+//        p.age = 10;
+//        
+//        NSString *key = [NSString stringWithFormat:@"person%d", 10];
+//        [self.cache saveObject:p ForKey:key Timeout:5];
+//    }
+    
+    {
+        for (int i = 0; i < 10; i++) {
+            Person *p = [[Person alloc] init];
+            p.age = i;
+            
+            NSString *key = [NSString stringWithFormat:@"person%d", i];
+            [self.cache saveObject:p ForKey:key Timeout:5];
+            
+        }
+
+    }
 }
 
 @end
