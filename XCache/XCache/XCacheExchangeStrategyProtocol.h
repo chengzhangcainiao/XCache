@@ -20,6 +20,6 @@
 /**
  *  按照对应的算法清理内存在的缓存对象
  */
-- (void)cleaningCacheObjects:(BOOL)keepAlive;
+- (void)cleaningCacheObjects:(BOOL)isArchive;
 
 @end

@@ -84,6 +84,11 @@
 //        
 //    }
     
+    {
+        NSMutableDictionary *dict = [@{} mutableCopy];
+        [dict removeObjectForKey:nil];
+    }
+    
 }
 
 @end

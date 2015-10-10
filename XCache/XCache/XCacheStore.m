@@ -94,6 +94,12 @@
     self.lock = nil;
 }
 
+- (void)resetMemoryRecord {
+    self.memorySize = 0;
+    self.memoryTotalCost = 0;
+    [self.objectMap removeAllObjects];
+}
+
 - (void)setupDatas {
     
     _isArchivring = NO;
@@ -154,6 +160,27 @@
 
 #pragma mark - 
 
+- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data {
+    
+    // 先删除存在的文件
+    [self removeDiskCacheFileWithKey:key];
+    
+    // 再将内容写入到新的文件
+    [data writeToFile:[NSFileManager pathForRootDirectoryWithPath:key] atomically:YES];
+}
+
+- (void)removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key {
+    [self.lock lock];
+    if (!(self.memorySize == 0)) {
+        self.memorySize--;
+    }
+    if (!(self.memoryTotalCost == 0)) {
+        self.memoryTotalCost -= [cacheObj cacheSize];
+    }
+    [self.objectMap removeObjectForKey:key];
+    [self.lock unlock];
+}
+
 - (void)removeDiskCacheFileWithKey:(NSString *)key {
     NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
     
@@ -164,13 +191,9 @@
     }
 }
 
-- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data {
-    
-    //1. 先删除存在的文件
-    [self removeDiskCacheFileWithKey:key];
-    
-    //2. 再将内容写入到新的文件
-    [data writeToFile:[NSFileManager pathForRootDirectoryWithPath:key] atomically:YES];
+- (void)removeAllDiskCacheFiles {
+    NSString *rootFolder = [NSFileManager pathForRootDirectory];
+    [NSFileManager removeFilesInDirectoryAtPath:rootFolder];
 }
 
 #pragma mark - 
@@ -203,7 +226,36 @@
 - (void)cleaningCachedObjects {
     
     //接收到内存警告时，清理内存对象，包归档到磁盘文件
-    [_fastTable cleaningCacheObjectsInMomery:NO];
+    [_fastTable cleaningCacheObjectsInMomery:YES];
+}
+
+- (void)removeAllCachedObjects {
+    
+    if (_isArchivring) {
+        return;
+    }
+    
+    [self.lock lock];
+    
+    _isArchivring = YES;
+    
+    NSArray *keys = [self.objectMap allKeys];
+    
+    for (id key in keys) {
+        XCacheObject *obj = [self.objectMap objectForKey:key];
+        
+        //写入磁盘文件
+        [self dataWriteToRootFolderWithKey:key Data:[obj cacheData]];
+        
+        //内存删除
+        [self removeMemoryCacheObject:obj WithKey:key];
+    }
+    
+    [self resetMemoryRecord];
+    
+    _isArchivring = NO;
+    
+    [self.lock unlock];
 }
 
 - (void)readDiskCurrentTotalCost {//读取磁盘缓存文件大小

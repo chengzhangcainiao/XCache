@@ -82,14 +82,34 @@
 - (XCacheObject *)loadObjectWithKey:(NSString *)key;
 
 /**
+ *  清理内存对象，直到当前缓存内存小于默认大小，对象归档到磁盘文件
+ */
+- (void)cleaningCachedObjects;
+
+/**
+ *  强制删除当前内存缓存的所有对象
+ */
+- (void)removeAllCachedObjects;
+
+/**
+ *  判断是否可以将XCacheObject实例载入到内存，判断内存大小是否超过规定大小
+ */
+- (BOOL)isCanLoadCacheObjectToMemory;
+
+/**
+ *  删除单个内存缓存对象
+ */
+- (void)removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key;
+
+/**
+ *  将NSData使用key作为文件名，写入磁盘文件
+ */
+- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data;
+
+/**
  *  删除某一个key文件
  */
 - (void)removeDiskCacheFileWithKey:(NSString *)key;
-
-/**
- *  将本地保存的缓存文件删除到规定大小
- */
-- (void)removeDiskCacheFilesOevrlessRoleSize;
 
 /**
  *  删除本地所有缓存文件
@@ -100,15 +120,5 @@
  *  遍历所有key和value
  */
 - (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL *isStop))block;
-
-/**
- *  清理内存对象，将超过规定大小的对象，归档到本地文件
- */
-- (void)cleaningCachedObjects;
-
-/**
- *  判断是否可以将XCacheObject实例载入到内存，判断内存大小是否超过规定大小
- */
-- (BOOL)isCanLoadCacheObjectToMemory;
 
 @end

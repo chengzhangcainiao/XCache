@@ -124,7 +124,7 @@
     
     if(defaultDirectory != nil){
         finalPath =  path;
-    } else { //传入的全路径不符合六种路径，就默认将路径拼接到document/
+    } else { //传入的全路径不符合六种路径，如果传入的路径错误，就将传入的路径改为拼接到document/
         finalPath = [self pathForDocumentsDirectoryWithPath:path];
     }
     

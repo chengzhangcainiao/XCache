@@ -87,7 +87,7 @@
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
 
-- (void)cleaningCacheObjects:(BOOL)keepAlive {}
+- (void)cleaningCacheObjects:(BOOL)isArchive {}
 
 @end
 
@@ -171,10 +171,10 @@
     [self cleaningCacheObjects:YES];
 }
 
-- (void)cleaningCacheObjects:(BOOL)keepAlive {
+- (void)cleaningCacheObjects:(BOOL)isArchive {
     [self.lock lock];
     
-    //当前被缓存的所有key
+    //保存当前遍历的缓存项的keys
     NSMutableArray *keys = [[self.store objectMap] mutableCopy];
     
     //规定最大缓存个数 与 当前内存缓存的最大个数
@@ -185,8 +185,48 @@
     NSInteger totalCost = self.store.memoryTotalCost;
     NSInteger maxCost = [XCacheConfig maxCacheOnMemoryCost];
     
+    isArchive = YES;
     
+    //当超过规定长度 或 规定大小
+    while ((totalCount > maxCount) || (totalCost > maxCost)) {
+        
+        //保存找到的最久未使用的缓存项的visitOrder
+        NSInteger oldestOrder = INT_MAX;
+        
+        //保存找到的最久未使用的缓存项
+        XCacheObject *oldestObject = nil;
+        
+        //保存找到的最久未使用的缓存项
+        id oldestkey = nil;
+        
+        //遍历所有缓存项，得到最小order的缓存项
+        for (id key in keys) {
+            XCacheObject *cacheObj = [[self.store objectMap] objectForKey:key];
+            if (cacheObj.visitOrder < oldestOrder) {
+                
+                //替换成找到最小的
+                oldestOrder = cacheObj.visitOrder;
+                oldestObject = cacheObj;
+                oldestkey = key;
+            }
+        }
+        
+        //找到了久未使用的缓存项
+        if (oldestkey) {
+            
+            [keys removeObject:oldestkey];
+            
+            //判断是否写入磁盘文件
+            if (isArchive) {
+                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
+            }
+            
+            //从内存删除
+            [self.store removeMemoryCacheObject:oldestObject WithKey:oldestkey];
+        }
+    }
     
+    isArchive = NO;
     
     [self.lock unlock];
 }
@@ -233,6 +273,7 @@
     } else {
         
         //从本地文件查找
+        
         NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
         
         if ([NSFileManager existsItemAtPath:filePath]) {
@@ -254,6 +295,7 @@
             return objectFinded;
             
         } else {
+            
             //本地文件未找到
             return nil;
         }
