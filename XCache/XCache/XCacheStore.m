@@ -111,9 +111,7 @@
     
     [self readDiskCurrentTotalCost];
     
-    _fastTable = [[XCacheFastTable alloc] initWithCacheExcangeStrategy:XCacheExchangeStrategyLRU
-                                                   CacheSearchStrategy:XCacheSearchStrategyNone
-                                                            CacheStore:self];
+    _fastTable = [[XCacheFastTable alloc] initWithCacheStrategyType:XCacheStrategyTypeLRU CacheStore:self];
 }
 
 - (void)changeToFastTable:(XCacheFastTable *)aTable {

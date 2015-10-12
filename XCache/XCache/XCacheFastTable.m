@@ -12,66 +12,45 @@
 
 @interface XCacheFastTable ()
 
-@property (nonatomic, strong) id<XCacheExchangeStrategyProtocol> exchangeStrategyIns;
-@property (nonatomic, strong) id<XCacheSearchStrategyProtocol> searchStrategyIns;
+
+@property (nonatomic, strong) id<XCacheStrategyProtocol> strategyIns;
 
 @end
 
 @implementation XCacheFastTable
 
-- (void)setupExchangeStrategy:(XCacheExchangeStrategy)strategy {
-    _exchangeStrategyType = strategy;
+- (void)setupStrategy:(XCacheStrategyType)type {
+    _cacheStrategyType = type;
     
-    switch (_exchangeStrategyType) {
-        case XCacheExchangeStrategyFIFO: {
-            _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
+    switch (_cacheStrategyType) {
+            
+        case XCacheStrategyTypeFIFO: {
+            _strategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
             break;
         }
 
-        case XCacheExchangeStrategyLFU: {
-            _exchangeStrategyIns = [XCacheStrategyFactory LFUExchangeWithTable:self];
+        case XCacheStrategyTypeLFU: {
+            _strategyIns = [XCacheStrategyFactory LFUExchangeWithTable:self];
             break;
         }
 
-        case XCacheExchangeStrategyLRU: {
-            _exchangeStrategyIns = [XCacheStrategyFactory LRUExchangeWithTable:self];
+        case XCacheStrategyTypeLRU: {
+            _strategyIns = [XCacheStrategyFactory LRUExchangeWithTable:self];
             break;
         }
 
         default: {
-            _exchangeStrategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
+            _strategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
             break;
         }
     }
 }
 
-- (void)setupSearchStrategy:(XCacheSearchStrategy)strategy {
-    _searchStrategyType = strategy;
-    
-    switch (_searchStrategyType) {
-        case XCacheSearchStrategyNone: {
-            _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];
-            break;
-        }
-        case XCacheSearchStrategyMulLevelCache: {
-            _searchStrategyIns = [XCacheStrategyFactory mulLevelSearchWithTable:self];
-            break;
-        }
-        default: {
-            _searchStrategyIns = [XCacheStrategyFactory normalSearchWithTable:self];
-            break;
-        }
-    }
-}
-
-- (instancetype)initWithCacheExcangeStrategy:(XCacheExchangeStrategy)exchangeStrategy
-                         CacheSearchStrategy:(XCacheSearchStrategy)searchStrategy
-                                  CacheStore:(XCacheStore *)store
+- (instancetype)initWithCacheStrategyType:(XCacheStrategyType)type CacheStore:(XCacheStore *)store
 {
     self = [super init];
     if (self) {
-        [self setupSearchStrategy:searchStrategy];
-        [self setupExchangeStrategy:exchangeStrategy];
+        [self setupStrategy:type];
         _store = store;
     }
     return self;
@@ -80,15 +59,15 @@
 #pragma mark - 
 
 - (XCacheObject *)getCacheObjectWithKey:(NSString *)key {
-    return [self.searchStrategyIns searchWithKey:key];
+    return [self.strategyIns searchWithKey:key];
 }
 
 - (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    [self.exchangeStrategyIns cacheObject:object WithKey:key];
+    [self.strategyIns cacheObject:object WithKey:key];
 }
 
 - (void)cleaningCacheObjectsInMomery:(BOOL)flag {
-    [self.exchangeStrategyIns cleaningCacheObjects:flag];
+    [self.strategyIns cleaningCacheObjects:flag];
 }
 
 @end

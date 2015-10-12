@@ -78,14 +78,13 @@
 		214EA43C1BB55124009FDB78 /* XCacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheObject.m; sourceTree = "<group>"; };
 		215051F51BC65E040031CB73 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		215051F61BC65E040031CB73 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		215E72461BCB9E54008697E2 /* XCacheStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStrategyProtocol.h; sourceTree = "<group>"; };
 		21B1C32F1BBE494A00DCD515 /* XCacheFastTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheFastTable.h; sourceTree = "<group>"; };
 		21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheFastTable.m; sourceTree = "<group>"; };
-		21B1C3331BBE788B00DCD515 /* XCacheExchangeStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheExchangeStrategyProtocol.h; sourceTree = "<group>"; };
 		21B1C3341BBE78CB00DCD515 /* XCacheStrategyFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStrategyFactory.h; sourceTree = "<group>"; };
 		21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheStrategyFactory.m; sourceTree = "<group>"; };
 		21D8DC561BBAF60F00EB61A4 /* XCacheStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheStore.h; sourceTree = "<group>"; };
 		21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCacheStore.m; sourceTree = "<group>"; };
-		21DFB8661BC574890069708B /* XCacheSearchStrategyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCacheSearchStrategyProtocol.h; sourceTree = "<group>"; };
 		21EBCFE11BBED6B00043B8BF /* NSMutableArray+Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Queue.h"; sourceTree = "<group>"; };
 		21EBCFE21BBED6B00043B8BF /* NSMutableArray+Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Queue.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,8 +186,7 @@
 				21D8DC571BBAF60F00EB61A4 /* XCacheStore.m */,
 				21B1C32F1BBE494A00DCD515 /* XCacheFastTable.h */,
 				21B1C3301BBE494A00DCD515 /* XCacheFastTable.m */,
-				21B1C3331BBE788B00DCD515 /* XCacheExchangeStrategyProtocol.h */,
-				21DFB8661BC574890069708B /* XCacheSearchStrategyProtocol.h */,
+				215E72461BCB9E54008697E2 /* XCacheStrategyProtocol.h */,
 				21B1C3341BBE78CB00DCD515 /* XCacheStrategyFactory.h */,
 				21B1C3351BBE78CB00DCD515 /* XCacheStrategyFactory.m */,
 				213AA9751BBBA36200E54EF6 /* NSArray+XCache.h */,

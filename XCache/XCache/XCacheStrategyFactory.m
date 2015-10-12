@@ -19,51 +19,31 @@
 
 @implementation XCacheStrategyFactory
 
-+ (id<XCacheExchangeStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table {
-    static XCacheExchangeFIFOStrategy *policy = nil;
++ (id<XCacheStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table {
+    static XCacheStrategyFIFOStrategy *policy = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        policy = [[XCacheExchangeFIFOStrategy alloc] init];
+        policy = [[XCacheStrategyFIFOStrategy alloc] init];
         policy.table = table;
     });
     return policy;
 }
 
-+ (id<XCacheExchangeStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table {
-    static XCacheExchangeLFUStrategy *policy = nil;
++ (id<XCacheStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table {
+    static XCacheStrategyLFUStrategy *policy = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        policy = [[XCacheExchangeLFUStrategy alloc] init];
+        policy = [[XCacheStrategyLFUStrategy alloc] init];
         policy.table = table;
     });
     return policy;
 }
 
-+ (id<XCacheExchangeStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table {
-    static XCacheExchangeLRUStrategy *policy = nil;
++ (id<XCacheStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table {
+    static XCacheStrategyLRUStrategy *policy = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        policy = [[XCacheExchangeLRUStrategy alloc] init];
-        policy.table = table;
-    });
-    return policy;
-}
-
-+ (id<XCacheSearchStrategyProtocol>)normalSearchWithTable:(XCacheFastTable *)table {
-    static XcacheNoneSearchStrategy *policy = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        policy = [[XcacheNoneSearchStrategy alloc] init];
-        policy.table = table;
-    });
-    return policy;
-}
-
-+ (id<XCacheSearchStrategyProtocol>)mulLevelSearchWithTable:(XCacheFastTable *)table {
-    static XcacheMulLevelCacheSearchStrategy *policy = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        policy = [[XcacheMulLevelCacheSearchStrategy alloc] init];
+        policy = [[XCacheStrategyLRUStrategy alloc] init];
         policy.table = table;
     });
     return policy;
@@ -73,7 +53,7 @@
 
 #pragma mark -
 
-@implementation XCacheExchangeStrategyBase
+@implementation XCacheStrategyBase
 
 - (NSRecursiveLock *)lock {
     if (!_lock) {
@@ -90,16 +70,18 @@
 
 - (void)cleaningCacheObjects:(BOOL)isArchive {}
 
+- (XCacheObject *)searchWithKey:(NSString *)key{return nil;}
+
 @end
 
 
-@interface XCacheExchangeFIFOStrategy ()
+@interface XCacheStrategyFIFOStrategy ()
 
 @property (nonatomic, strong) NSMutableArray *keyQueue;
 
 @end
 
-@implementation XCacheExchangeFIFOStrategy
+@implementation XCacheStrategyFIFOStrategy
 
 - (NSMutableArray *)keyQueue {
     if (!_keyQueue) {
@@ -113,26 +95,18 @@
     _keyQueue = nil;
 }
 
-- (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    
-}
 
 @end
 
 
 
-@implementation XCacheExchangeLFUStrategy
+@implementation XCacheStrategyLFUStrategy
 
-- (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    
-}
 
 @end
 
-/**
- *  LRU替换缓存对象
- */
-@interface XCacheExchangeLRUStrategy ()
+
+@interface XCacheStrategyLRUStrategy()
 
 /**
  *  循环记录当前访问缓存对象的总次数
@@ -141,7 +115,7 @@
 
 @end
 
-@implementation XCacheExchangeLRUStrategy
+@implementation XCacheStrategyLRUStrategy
 
 - (instancetype)init {
     self = [super init];
@@ -149,6 +123,54 @@
         _currentVisitCount = 0;
     }
     return self;
+}
+
+- (XCacheObject *)searchWithKey:(NSString *)key {
+    
+    if ([[self.store.objectMap allKeys] containsObject:key]) {
+        
+        //内存中查找到XCacheObejct实例
+        XCacheObject *finded = [self.store.objectMap objectForKey:key];
+        //        NSData *data = [finded cacheData];
+        //        return [[XCacheObject alloc] initWithData:data];
+        return finded;
+        
+    } else {
+        
+        //从本地文件查找
+        NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
+        
+        if ([NSFileManager existsItemAtPath:filePath]) {
+            
+            //本地文件找到options字典的NSData缓存文件（options字典: 1)原始对象  2)超时时间）
+            NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
+            
+            //将NSData保存到一个新的的XcacheObeject实例中
+            XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
+            
+            //判断是否载入到内存
+            if ([self.store isCanLoadCacheObjectToMemory]) {
+                
+                //以默认的内存最大缓存时间，保存到内存字典
+                
+                //这句会引起死锁，也没必要，因为此时的XCacheObject实例，是从本地文件恢复的，肯定是带有超时设置的
+                //                [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
+                
+                //此处后面需要加上判断读取到的缓存，是否已经超时
+                [[self.store objectMap] setObject:objectFinded forKey:key];
+                
+                //移除本地文件
+                [NSFileManager removeItemAtPath:filePath];
+            }
+            
+            return objectFinded;
+            
+        } else {
+            
+            //本地文件未找到
+            return nil;
+        }
+    }
 }
 
 - (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
@@ -243,77 +265,5 @@
     _currentVisitCount = index;
 }
 
-@end
-
-#pragma mark - 
-
-@implementation XcacheSearchStrategyBase
-
-- (XCacheStore *)store {
-    return self.table.store;
-}
-
-- (XCacheObject *)searchWithKey:(NSString *)key {return nil;}
-
-@end
-
-@implementation XcacheNoneSearchStrategy
-
-- (XCacheObject *)searchWithKey:(NSString *)key {
-    
-    if ([[self.store.objectMap allKeys] containsObject:key]) {
-        
-        //内存中查找到XCacheObejct实例
-        XCacheObject *finded = [self.store.objectMap objectForKey:key];
-//        NSData *data = [finded cacheData];
-//        return [[XCacheObject alloc] initWithData:data];
-        return finded;
-        
-    } else {
-        
-        //从本地文件查找
-        NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
-        
-        if ([NSFileManager existsItemAtPath:filePath]) {
-            
-            //本地文件找到options字典的NSData缓存文件（options字典: 1)原始对象  2)超时时间）
-            NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
-            
-            //将NSData保存到一个新的的XcacheObeject实例中
-            XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
-            
-            //判断是否载入到内存
-            if ([self.store isCanLoadCacheObjectToMemory]) {
-                
-                //以默认的内存最大缓存时间，保存到内存字典
-                
-                //这句会引起死锁，也没必要，因为此时的XCacheObject实例，是从本地文件恢复的，肯定是带有超时设置的
-//                [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
-                
-                //此处后面需要加上判断读取到的缓存，是否已经超时
-                [[self.store objectMap] setObject:objectFinded forKey:key];
-                
-                //移除本地文件
-                [NSFileManager removeItemAtPath:filePath];
-            }
-            
-            return objectFinded;
-            
-        } else {
-            
-            //本地文件未找到
-            return nil;
-        }
-    }
-}
-
-@end
-
-@implementation XcacheMulLevelCacheSearchStrategy
-
-- (XCacheObject *)searchWithKey:(NSString *)key {
-    //具体实现
-    return nil;
-}
 
 @end

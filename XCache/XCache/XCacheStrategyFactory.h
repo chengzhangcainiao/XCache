@@ -7,25 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XCacheExchangeStrategyProtocol.h"
-#import "XCacheSearchStrategyProtocol.h"
+#import "XCacheStrategyProtocol.h"
 
 @class XCacheStore;
 @class XCacheFastTable;
 
 @interface XCacheStrategyFactory : NSObject
 
-+ (id<XCacheExchangeStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table;
-+ (id<XCacheExchangeStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table;
-+ (id<XCacheExchangeStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table;
-
-+ (id<XCacheSearchStrategyProtocol>)normalSearchWithTable:(XCacheFastTable *)table;
-+ (id<XCacheSearchStrategyProtocol>)mulLevelSearchWithTable:(XCacheFastTable *)table;
++ (id<XCacheStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table;
++ (id<XCacheStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table;
++ (id<XCacheStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table;
 
 @end
 
 
-@interface XCacheExchangeStrategyBase : NSObject <XCacheExchangeStrategyProtocol>
+@interface XCacheStrategyBase : NSObject <XCacheStrategyProtocol>
 
 @property (nonatomic, strong) NSRecursiveLock *lock;
 @property (nonatomic, weak) XCacheFastTable *table;
@@ -33,29 +29,14 @@
 
 @end
 
-@interface XCacheExchangeFIFOStrategy : XCacheExchangeStrategyBase
+@interface XCacheStrategyFIFOStrategy : XCacheStrategyBase
 
 @end
 
-@interface XCacheExchangeLFUStrategy : XCacheExchangeStrategyBase
+@interface XCacheStrategyLFUStrategy : XCacheStrategyBase
 
 @end
 
-@interface XCacheExchangeLRUStrategy : XCacheExchangeStrategyBase
-
-@end
-
-@interface XcacheSearchStrategyBase : NSObject <XCacheSearchStrategyProtocol>
-
-@property (nonatomic, weak) XCacheFastTable *table;
-@property (nonatomic, weak) XCacheStore *store;
-
-@end
-
-@interface XcacheNoneSearchStrategy : XcacheSearchStrategyBase
-
-@end
-
-@interface XcacheMulLevelCacheSearchStrategy : XcacheSearchStrategyBase
+@interface XCacheStrategyLRUStrategy : XCacheStrategyBase
 
 @end
