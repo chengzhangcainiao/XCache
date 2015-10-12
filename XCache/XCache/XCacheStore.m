@@ -136,16 +136,24 @@
     XCacheObject *cacheObject = [self loadObjectWithKey:key];
     
     if (!cacheObject) {
+        
         //内存中不存在，创建一个新的XCacheObject实例，包装原始对象
+        
         isNewer = YES;
         cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
         newerSize = [cacheObject cacheSize];
         olderSize = 0;
     } else {
-        //替换传入的新的原始对象
+        
+        //内存中存在缓存key，则替换传入的新的原始对象
+        
         isNewer = NO;
         olderSize = [cacheObject cacheSize];
+        
+        //替换找到的XcacheObject实例的data
         [cacheObject generateDataWithObject:object Duration:duration];
+        
+        //再记录最新的缓存大小
         newerSize = [cacheObject cacheSize];
     }
     
@@ -288,16 +296,18 @@
 
 - (BOOL)isCanLoadCacheObjectToMemory {
     
-    //当前不能进行内存清理
+    //如果当前进行内存清理，则不能对内存进行读写
     BOOL flag1 = !_isArchivring;
     
-    //设置了内存最大花销
+    //设置了内存最大花销 与  当前内存花销 < 设置的最大内存花销
     BOOL flag2 = [XCacheConfig maxCacheOnMemoryCost] > 0;
-
-    //当当前内存花销 < 设置的最大内存花销
     BOOL flag3 = self.memoryTotalCost < [XCacheConfig maxCacheOnMemoryCost];
     
-    return flag1 && flag2 && flag3;
+    //设置了内存长度 与  当前内存长度 < 设置的最大内存长度
+    BOOL flag4 = [XCacheConfig maxCacheOnMemorySize] > 0;
+    BOOL flag5 = self.memorySize < [XCacheConfig maxCacheOnMemorySize];
+    
+    return flag1 && flag2 && flag3 && flag4 && flag5;
 }
 
 @end

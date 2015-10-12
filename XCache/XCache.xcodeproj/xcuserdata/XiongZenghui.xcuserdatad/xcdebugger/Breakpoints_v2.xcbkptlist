@@ -48,32 +48,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "XCache/XCacheStore.m"
-            timestampString = "466313730.667091"
+            filePath = "XCache/ViewController.m"
+            timestampString = "466321219.775463"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
-            landmarkName = "-saveObject:forKey:expiredAfter:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XCache/XCacheStore.m"
-            timestampString = "466313730.667091"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "-saveObject:forKey:expiredAfter:"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "-testCache"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -8,6 +8,7 @@
 
 #import "XCacheStrategyFactory.h"
 #import <Availability.h>
+
 #import "NSMutableArray+Queue.h"
 #import "NSFileManager+XCache.h"
 #import "NSMutableDictionary+XCache.h"
@@ -264,19 +265,21 @@
         
         //内存中查找到XCacheObejct实例
         XCacheObject *finded = [self.store.objectMap objectForKey:key];
-        NSData *data = [finded cacheData];
-        return [[XCacheObject alloc] initWithData:data];
+//        NSData *data = [finded cacheData];
+//        return [[XCacheObject alloc] initWithData:data];
+        return finded;
         
     } else {
         
         //从本地文件查找
-        
         NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
         
         if ([NSFileManager existsItemAtPath:filePath]) {
             
-            //本地文件找到
+            //本地文件找到options字典的NSData缓存文件（options字典: 1)原始对象  2)超时时间）
             NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
+            
+            //将NSData保存到一个新的的XcacheObeject实例中
             XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
             
             //判断是否载入到内存
