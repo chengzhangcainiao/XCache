@@ -92,7 +92,6 @@
 
 - (void)dealloc {
     [self.notificationCenter removeObserver:self];
-    self.lock = nil;
 }
 
 - (void)resetMemoryRecord {
@@ -154,6 +153,7 @@
         //使用内存保存
         [self.objectMap safeSetObject:cacheObject forKey:key];
         self.memorySize++;
+        
         [_fastTable setCacheObject:cacheObject WithKey:key];
     }
 }
@@ -193,7 +193,6 @@
     }
     
     [self.objectMap removeObjectForKey:key];
-    
     [self.lock unlock];
 }
 

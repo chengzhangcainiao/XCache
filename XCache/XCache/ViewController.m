@@ -98,27 +98,25 @@
 
 - (void)testCache {
     
-//    NSString *rootPath = [NSFileManager pathForRootDirectory];
+    NSString *rootPath = [NSFileManager pathForRootDirectory];
     
-//    {
-//        Person *p = [[Person alloc] init];
-//        p.age = 10;
-//        
-//        NSString *key = [NSString stringWithFormat:@"person%d", 10];
-//        [self.cache saveObject:p ForKey:key Timeout:5];
-//    }
+//    Person *p = [[Person alloc] init];
+//    p.age = 10;
+//    
+//    NSString *key = [NSString stringWithFormat:@"person%d", 10];
+//    [self.cache saveObject:p ForKey:key Timeout:5];
     
-    {
-        for (int i = 0; i < 10; i++) {
-            Person *p = [[Person alloc] init];
-            p.age = i;
-            
-            NSString *key = [NSString stringWithFormat:@"person%d", i];
-            [self.cache saveObject:p ForKey:key Timeout:5];
-            
-        }
-
+    for (int i = 0; i < 10; i++) {
+        
+        Person *p = [[Person alloc] init];
+        p.age = i;
+        
+        NSString *key = [NSString stringWithFormat:@"person%d", i];
+        
+        [self.cache saveObject:p ForKey:key Timeout:5];
     }
+    
+    
 }
 
 @end

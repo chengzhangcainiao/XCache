@@ -286,7 +286,12 @@
             if ([self.store isCanLoadCacheObjectToMemory]) {
                 
                 //以默认的内存最大缓存时间，保存到内存字典
-                [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
+                
+                //这句会引起死锁，也没必要，因为此时的XCacheObject实例，是从本地文件恢复的，肯定是带有超时设置的
+//                [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
+                
+                //此处后面需要加上判断读取到的缓存，是否已经超时
+                [[self.store objectMap] setObject:objectFinded forKey:key];
                 
                 //移除本地文件
                 [NSFileManager removeItemAtPath:filePath];

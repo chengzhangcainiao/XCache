@@ -13,7 +13,7 @@
 @implementation NSFileManager (XCache)
 
 + (void)initialize {
-    NSString *path = [self getRootFolderPath];
+    NSString *path = [self pathForRootDirectory];
     [self createDirectoriesForPath:path];
 }
 
@@ -24,41 +24,7 @@
 #pragma mark - Path
 
 + (NSString *)getRootFolderPath {
-    NSString *documentsDirectory = [self pathForDocumentsDirectory];
-//    NSString *rootPath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, [self rootFolder]];
-//    return rootPath;
-    return documentsDirectory;
-}
-
-+ (NSString *)getRootFolderPathForFile:(NSString *)fileName
-{
-    NSString *rootFilePath = [[self getRootFolderPath] stringByAppendingPathComponent:fileName];
-    return rootFilePath;
-}
-
-+ (NSString *)getBundlePathForFile:(NSString *)fileName
-{
-    NSString *fileExtension = [fileName pathExtension];
-    fileName = [fileName stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@", fileExtension] withString:@""];
-    return [[NSBundle mainBundle] pathForResource:fileName ofType:fileExtension];
-}
-
-+ (NSString *)getDocumentsDirectoryForFile:(NSString *)fileName
-{
-    NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:fileName];
-}
-
-+ (NSString *)getLibraryDirectoryForFile:(NSString *)fileName
-{
-    NSString *libraryDirectory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [libraryDirectory stringByAppendingPathComponent:fileName];
-}
-
-+ (NSString *)getCacheDirectoryForFile:(NSString *)fileName
-{
-    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [cacheDirectory stringByAppendingPathComponent:fileName];
+    return [self pathForRootDirectoryWithPath:[self rootFolder]];
 }
 
 +(NSMutableArray *)absoluteDirectories
@@ -143,7 +109,15 @@
 }
 
 +(NSString *)pathForRootDirectory {
-    return [self getRootFolderPath];
+    static NSString *path = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *docPath = [paths lastObject];
+        NSString *rootFolder = [self rootFolder];
+        path = [docPath stringByAppendingPathComponent:rootFolder];
+    });
+    return path;
 }
 
 +(NSString *)pathForApplicationSupportDirectory
@@ -344,10 +318,11 @@
 #pragma mark - File
 
 +(BOOL)existsItemAtPath:(NSString *)path {
-    //1. 传入的全路径
-    //2. 修正后默认的document/路径
+    
+    // 如果传入的全路径不符合六种之一，就修正为默认的document/路径
     NSString *absulotePath = [self absolutePath:path];
-    return [[NSFileManager defaultManager] fileExistsAtPath:absulotePath];
+    
+    return [[[self class] defaultManager] fileExistsAtPath:absulotePath];
 }
 
 +(BOOL)isFileItemAtPath:(NSString *)path {
