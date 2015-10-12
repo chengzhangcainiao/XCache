@@ -128,20 +128,26 @@
     
     [self.lock lock];
     
+    NSInteger olderSize;
+    NSInteger newerSize;
+    BOOL isNewer = NO;
+    
     //先看这个key对应的XcacheObject实例有没有
     XCacheObject *cacheObject = [self loadObjectWithKey:key];
     
     if (!cacheObject) {
         //内存中不存在，创建一个新的XCacheObject实例，包装原始对象
+        isNewer = YES;
         cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
+        newerSize = [cacheObject cacheSize];
+        olderSize = 0;
     } else {
         //替换传入的新的原始对象
+        isNewer = NO;
+        olderSize = [cacheObject cacheSize];
         [cacheObject generateDataWithObject:object Duration:duration];
-        self.memoryTotalCost -= [cacheObject cacheSize];
+        newerSize = [cacheObject cacheSize];
     }
-    
-    //记录当前新的内存大小
-    self.memoryTotalCost += [cacheObject cacheSize];
     
     [self.lock unlock];
     
@@ -152,7 +158,14 @@
     } else {
         //使用内存保存
         [self.objectMap safeSetObject:cacheObject forKey:key];
-        self.memorySize++;
+        
+        if (isNewer) {
+            self.memorySize++;
+            self.memoryTotalCost += newerSize;
+        } else {
+            self.memoryTotalCost -= olderSize;
+            self.memoryTotalCost += newerSize;
+        }
         
         [_fastTable setCacheObject:cacheObject WithKey:key];
     }

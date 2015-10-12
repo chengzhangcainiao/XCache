@@ -171,21 +171,17 @@
 - (void)cleaningCacheObjects:(BOOL)isArchive {
     [self.lock lock];
     
-    //保存当前遍历的缓存项的keys
     NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
     
-    //规定最大缓存个数 与 当前内存缓存的最大个数
     NSInteger maxCount = [XCacheConfig maxCacheOnMemorySize];
-    NSInteger totalCount = [[self.store objectMap] count];
     
-    //规定的最大内存花销 与 当前内存的花销
-    NSInteger totalCost = self.store.memoryTotalCost;
     NSInteger maxCost = [XCacheConfig maxCacheOnMemoryCost];
     
+    //将淘汰的对象写入磁盘文件
     isArchive = YES;
     
     //当超过规定长度 或 规定大小
-    while ((totalCount > maxCount) || (totalCost > maxCost)) {
+    while (([keys count] > maxCount) || (self.store.memoryTotalCost > maxCost)) {
         
         //保存找到的最久未使用的缓存项的visitOrder
         NSInteger oldestOrder = INT_MAX;
@@ -193,7 +189,7 @@
         //保存找到的最久未使用的缓存项
         XCacheObject *oldestObject = nil;
         
-        //保存找到的最久未使用的缓存项
+        //保存找到的最久未使用的缓存项的Key
         id oldestkey = nil;
         
         //遍历所有缓存项，得到最小order的缓存项
@@ -211,6 +207,7 @@
         //找到了久未使用的缓存项
         if (oldestkey) {
             
+            //遍历数组移除key
             [keys removeObject:oldestkey];
             
             //判断是否写入磁盘文件

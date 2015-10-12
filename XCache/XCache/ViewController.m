@@ -16,6 +16,9 @@
 
 @property (nonatomic, strong) XCache *cache;
 
+@property (nonatomic, strong) NSRecursiveLock *lock1;
+@property (nonatomic, strong) NSRecursiveLock *lock2;
+
 @end
 
 @implementation ViewController
@@ -35,6 +38,7 @@
     btn.frame = CGRectMake(20, 100, 150, 60);
     [self.view addSubview:btn];
     
+//    [btn addTarget:self action:@selector(testLock) forControlEvents:UIControlEventTouchUpInside];
     [btn addTarget:self action:@selector(testCache) forControlEvents:UIControlEventTouchUpInside];
     
 //    NSString *path = [NSFileManager pathForRootDirectoryWithPath:@"ccc"];
@@ -117,6 +121,24 @@
     }
     
     
+}
+
+- (void)testLock {
+    
+    _lock1 = [[NSRecursiveLock alloc] init];
+    _lock2 = [[NSRecursiveLock alloc] init];
+    
+    [_lock1 lock];
+    NSLog(@"lock1 lock\n");
+    
+    [_lock2 lock];
+    NSLog(@"lock2 lock\n");
+    NSLog(@"lock2 block\n");
+    [_lock2 unlock];
+    NSLog(@"lock2 unlock\n");
+    
+    [_lock1 unlock];
+    NSLog(@"lock1 unlock\n");
 }
 
 @end
