@@ -29,9 +29,14 @@ typedef NS_ENUM(NSInteger, XCacheStrategyType){
     XCacheStrategyTypeLFU,
     
     /**
-     *  在某一个时间段内，替换换掉访问次数最少的
+     *  在某一个时间段内，替换换掉访问次序最小
      */
     XCacheStrategyTypeLRU,
+    
+    /**
+     *  在某一个时间段内，替换换掉访问次序最小 + 访问次数最小
+     */
+    XCacheStrategyTypeLRU_K,
     
     /**
      *  用户自定义
@@ -49,6 +54,11 @@ typedef NS_ENUM(NSInteger, XCacheStrategyType){
  *  使用自定义缓存算法
  */
 - (void)registCustomer:(id<XCacheStrategyProtocol>)exchange;
+
+/**
+ *  修改返回值，确定LRU_K算法中的k值
+ */
+- (NSInteger)kCount;
 
 /**
  *  传入 查询策略 和 替换策略

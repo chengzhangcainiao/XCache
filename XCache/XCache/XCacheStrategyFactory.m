@@ -51,6 +51,16 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     return policy;
 }
 
++ (id<XCacheStrategyProtocol>)LRU_kExchangeWithTable:(XCacheFastTable *)table KCount:(NSInteger)k {
+    static XCacheStrategyLRU_KStrategy *policy = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        policy = [[XCacheStrategyLRU_KStrategy alloc] initWithK:k];
+        policy.table = table;
+    });
+    return policy;
+}
+
 @end
 
 #pragma mark -
@@ -312,7 +322,27 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     [self recycleCurrentVisitOrder];
     
     //增加缓存项被访问的次数
-    cacheObject.visitCount++;
+    //cacheObject.visitCount++;
+}
+
+@end
+
+@interface XCacheStrategyLRU_KStrategy ()
+
+@property (nonatomic, assign)NSInteger currentVisitCount;
+@property (nonatomic, assign)NSInteger k;
+
+@end
+
+@implementation XCacheStrategyLRU_KStrategy
+
+- (instancetype)initWithK:(NSInteger)k {
+    self = [super init];
+    if (self) {
+        _k = (k >= LRU_K_COUNT) ? k : LRU_K_COUNT;
+        _currentVisitCount = 0;
+    }
+    return self;
 }
 
 @end

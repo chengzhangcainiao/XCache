@@ -17,6 +17,7 @@
 + (id<XCacheStrategyProtocol>)FIFOExchangeWithTable:(XCacheFastTable *)table;
 + (id<XCacheStrategyProtocol>)LFUExchangeWithTable:(XCacheFastTable *)table;
 + (id<XCacheStrategyProtocol>)LRUExchangeWithTable:(XCacheFastTable *)table;
++ (id<XCacheStrategyProtocol>)LRU_kExchangeWithTable:(XCacheFastTable *)table KCount:(NSInteger)k;
 
 @end
 
@@ -38,5 +39,11 @@
 @end
 
 @interface XCacheStrategyLRUStrategy : XCacheStrategyBase
+
+@end
+
+@interface XCacheStrategyLRU_KStrategy : XCacheStrategyBase
+
+- (instancetype)initWithK:(NSInteger)k;
 
 @end

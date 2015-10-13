@@ -38,6 +38,11 @@
             _strategyIns = [XCacheStrategyFactory LRUExchangeWithTable:self];
             break;
         }
+            
+        case XCacheStrategyTypeLRU_K: {
+            _strategyIns = [XCacheStrategyFactory LRU_kExchangeWithTable:self KCount:[self kCount]];
+        }
+            break;
 
         default: {
             _strategyIns = [XCacheStrategyFactory FIFOExchangeWithTable:self];
@@ -68,6 +73,16 @@
 
 - (void)cleaningCacheObjectsInMomery:(BOOL)flag {
     [self.strategyIns cleaningCacheObjects:flag];
+}
+
+#pragma mark - 
+
+- (void)registCustomer:(id<XCacheStrategyProtocol>)exchange {
+    
+}
+
+- (NSInteger)kCount {
+    return 3;
 }
 
 @end
