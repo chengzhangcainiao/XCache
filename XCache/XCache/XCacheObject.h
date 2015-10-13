@@ -26,6 +26,11 @@
 @property (nonatomic, assign) NSInteger visitOrder;
 
 /**
+ *  记录被访问的次数
+ */
+@property (nonatomic, assign) NSInteger visitCount;
+
+/**
  *	从读取缓存原始对象
  */
 - (instancetype)initWithData:(NSData *)data;

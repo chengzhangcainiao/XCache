@@ -33,6 +33,7 @@ NSString *const TargetObject          = @"TargetObject";
     self = [super init];
     if (self) {
         _visitOrder = 0;
+        _visitCount = 0;
         _data = data;
     }
     return self;
@@ -42,6 +43,7 @@ NSString *const TargetObject          = @"TargetObject";
     self = [super init];
     if (self) {
         _visitOrder = 0;
+        _visitCount = 0;
         [self generateDataWithObject:aObject Duration:duration];
     }
     return self;

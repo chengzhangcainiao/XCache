@@ -130,20 +130,17 @@
     NSInteger newerSize;
     BOOL isNewer = NO;
     
-    //先看这个key对应的XcacheObject实例有没有
+    //先查找这个key，有没有存在对应的XcacheObject缓存实例
     XCacheObject *cacheObject = [self loadObjectWithKey:key];
     
-    if (!cacheObject) {
-        
-        //内存中不存在，创建一个新的XCacheObject实例，包装原始对象
+    if (!cacheObject) {//内存中不存在，创建一个新的XCacheObject实例，包装原始对象
         
         isNewer = YES;
         cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
         newerSize = [cacheObject cacheSize];
         olderSize = 0;
-    } else {
         
-        //内存中存在缓存key，则替换传入的新的原始对象
+    } else {//内存中存在缓存key，则替换传入的新的原始对象
         
         isNewer = NO;
         olderSize = [cacheObject cacheSize];
