@@ -655,18 +655,18 @@
 }
 
 + (NSString *)x_readFileAsStringWithPath:(NSString *)path {
-    return [self readFileAsStringWithPath:path Error:nil];
+    return [self x_readFileAsStringWithPath:path Error:nil];
 }
 
-+ (NSString *)readFileAsStringWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error {
++ (NSString *)x_readFileAsStringWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error {
     return [NSString stringWithContentsOfFile:[self x_absolutePath:path] encoding:NSUTF8StringEncoding error:error];
 }
 
-+ (NSArray *)readFileAsArrayWithPath:(NSString *)path {
++ (NSArray *)x_readFileAsArrayWithPath:(NSString *)path {
     return [NSArray arrayWithContentsOfFile:[self x_absolutePath:path]];
 }
 
-+ (NSMutableArray *)readFileAsMutableArrayWithPath:(NSString *)path {
++ (NSMutableArray *)x_readFileAsMutableArrayWithPath:(NSString *)path {
     return [NSMutableArray arrayWithContentsOfFile:[self x_absolutePath:path]];
 }
 
