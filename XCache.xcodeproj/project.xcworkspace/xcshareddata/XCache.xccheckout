@@ -10,31 +10,31 @@
 	<string>XCache</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>8220C6E40DE80B163D0A725BB0B784E57A188A33</key>
-		<string>github.com:chengzhangcainiao/XCache.git</string>
+		<key>C93A892111FCDEA076AD165D42C21971BB0B7AF0</key>
+		<string>https://git.coding.net/xiongzenghui/XCache.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>XCache/XCache.xcodeproj</string>
+	<string>XCache.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>8220C6E40DE80B163D0A725BB0B784E57A188A33</key>
-		<string>../../..</string>
+		<key>C93A892111FCDEA076AD165D42C21971BB0B7AF0</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:chengzhangcainiao/XCache.git</string>
+	<string>https://git.coding.net/xiongzenghui/XCache.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8220C6E40DE80B163D0A725BB0B784E57A188A33</string>
+	<string>C93A892111FCDEA076AD165D42C21971BB0B7AF0</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>8220C6E40DE80B163D0A725BB0B784E57A188A33</string>
+			<string>C93A892111FCDEA076AD165D42C21971BB0B7AF0</string>
 			<key>IDESourceControlWCCName</key>
-			<string>XCache</string>
+			<string>XCache_coding</string>
 		</dict>
 	</array>
 </dict>

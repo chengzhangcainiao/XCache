@@ -46,12 +46,12 @@
         return;
     }
     
-    [self.store saveObject:object forKey:key expiredAfter:time];
+    [self.store x_saveObject:object forKey:key expiredAfter:time];
     
 }
 
 - (id)x_getObjectWithKey:(NSString *)key {
-    return [self.store loadObjectWithKey:key];
+    return [self.store x_loadObjectWithKey:key];
 }
 
 - (void)x_removeObjectWithKey:(NSString *)key {

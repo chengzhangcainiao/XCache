@@ -114,7 +114,7 @@
     _fastTable = [[XCacheFastTable alloc] initWithCacheStrategyType:XCacheStrategyTypeLRU CacheStore:self];
 }
 
-- (void)changeToFastTable:(XCacheFastTable *)aTable {
+- (void)x_changeToFastTable:(XCacheFastTable *)aTable {
     if (_fastTable != aTable) {
         self.fastTable = aTable;
     }
@@ -122,7 +122,7 @@
 
 #pragma mark - 
 
-- (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration {
+- (void)x_saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration {
     
     [self.lock lock];
     
@@ -131,7 +131,7 @@
     BOOL isNewer = NO;
     
     //先查找这个key，有没有存在对应的XcacheObject缓存实例
-    XCacheObject *cacheObject = [self loadObjectWithKey:key];
+    XCacheObject *cacheObject = [self x_loadObjectWithKey:key];
     
     if (!cacheObject) {//内存中不存在，创建一个新的XCacheObject实例，包装原始对象
         
@@ -174,7 +174,7 @@
     }
 }
 
-- (XCacheObject *)loadObjectWithKey:(NSString *)key {
+- (XCacheObject *)x_loadObjectWithKey:(NSString *)key {
     return [_fastTable x_getCacheObjectWithKey:key];
 }
 
@@ -249,7 +249,7 @@
 #pragma mark - 
 
 - (void)x_addObserveNotifications {
-    [self.x_notificationCenter addObserver:self selector:@selector(cleaningCachedObjects)
+    [self.x_notificationCenter addObserver:self selector:@selector(x_cleaningCachedObjects)
                                     name:UIApplicationDidReceiveMemoryWarningNotification
                                   object:nil];
 }
@@ -257,7 +257,7 @@
 - (void)x_cleaningCachedObjects {
     
     //接收到内存警告时，清理内存对象，包归档到磁盘文件
-    [_fastTable x_cleaningCacheObjectsInMomery:YES];
+    [_fastTable x_cleaningCacheObjectsInMomery];
 }
 
 - (void)x_removeAllCachedObjects {

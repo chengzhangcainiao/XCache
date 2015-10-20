@@ -18,12 +18,22 @@
 /**
  *  一个对象在内存中最大缓存的时间
  */
-+ (NSInteger)x_maxCacheOnMemoryTime;
++ (NSTimeInterval)x_maxCacheOnMemoryTime;
 
 /**
  *  缓存文件在磁盘上最大缓存的时间
  */
-+ (NSInteger)x_maxCacheOnDiskTime;
++ (NSTimeInterval)x_maxCacheOnDiskTime;
+
+/**
+ *  轮询内存的时间间隔
+ */
++ (NSTimeInterval)x_cycleArchiveTime;
+
+/**
+ *  是否将淘汰的对象写入磁盘文件
+ */
++ (BOOL)x_isArchiverWhenLose;
 
 /**
  *  内存队列最大缓存对象的长度
@@ -49,11 +59,6 @@
  *  磁盘缓存最大的空间
  */
 + (NSInteger)x_maxCacheOnDiskCost;
-
-/**
- *  轮询内存的时间间隔
- */
-+ (NSInteger)x_cycleArchiveTime;
 
 
 + (NSInteger)x_nowTimestamp;

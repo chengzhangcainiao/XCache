@@ -85,7 +85,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 
 - (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
 
-- (void)x_cleaningCacheObjects:(BOOL)isArchive {}
+- (void)x_cleaningCacheObjects {}
 
 - (XCacheObject *)x_searchWithKey:(NSString *)key{return nil;}
 
@@ -177,13 +177,8 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
             //将NSData保存到一个新的的XcacheObeject实例中
             XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
             
-            //是否超时
-            if ([objectFinded x_isExpirate]) {
-                return nil;
-            }
-            
             //判断是否载入到内存
-            if ([self.store x_isCanLoadCacheObjectToMemory]) {
+            if ([self.store x_isCanLoadCacheObjectToMemory] && ![objectFinded x_isExpirate]) {
                 /*
                  这句会引起死锁，也没必要。因为此时的XCacheObject实例，
                  是从本地文件恢复的，肯定是带有超时设置的。
@@ -210,10 +205,13 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 }
 
 - (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    [self x_cleaningCacheObjects:YES];
+    if (![self x_isConstainKeyInObjectMap:key]) {
+        [self x_updateCacheObjectVisitOrder:object];
+    }
+    [self x_cleaningCacheObjects];
 }
 
-- (void)x_cleaningCacheObjects:(BOOL)isArchive {
+- (void)x_cleaningCacheObjects {
     [self.lock lock];
     
     NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
@@ -222,8 +220,10 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     
     NSInteger maxCost = [XCacheConfig x_maxCacheOnMemoryCost];
     
-    //将淘汰的对象写入磁盘文件
-    isArchive = YES;
+    BOOL isArchiveWhenLose = [XCacheConfig x_isArchiverWhenLose];
+    
+    //当前是否可以进行写入操作
+    BOOL isArchiving = YES;
     
     //当超过规定长度 或 规定大小
     while (([keys count] > maxCount) || (self.store.memoryTotalCost > maxCost)) {
@@ -244,7 +244,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         if (oldestkey) {
             
             //判断是否写入磁盘文件
-            if (isArchive) {
+            if (isArchiving && isArchiveWhenLose) {
                 [self.store x_dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject x_cacheData]];
             }
             
@@ -256,7 +256,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         }
     }
     
-    isArchive = NO;
+    isArchiving = NO;
     
     [self.lock unlock];
 }
@@ -334,11 +334,13 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 
 @interface XCacheStrategyLRU_KStrategy ()
 
-@property (nonatomic, assign) NSInteger currentVisitCount;
 @property (nonatomic, assign) NSInteger k;
-
 @property (nonatomic, strong) NSMutableArray *historyQueue;
 @property (nonatomic, strong) NSMutableArray *cacheQueue;
+
+@property (nonatomic, strong) NSTimer *histotyTimer;
+
+- (void)x_startScheduleHistoryQueue;
 
 @end
 
@@ -358,37 +360,80 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     return _cacheQueue;
 }
 
+- (void)dealloc {
+    [_histotyTimer invalidate];
+    _histotyTimer = nil;
+}
+
 - (instancetype)initWithK:(NSInteger)k {
     self = [super init];
     if (self) {
         _k = (k >= LRU_K_COUNT) ? k : LRU_K_COUNT;
-        _currentVisitCount = 0;
     }
     return self;
 }
 
 - (XCacheObject *)x_searchWithKey:(NSString *)key {
-    
-    BOOL isExistInMemory = [self x_isConstainKeyInObjectMap:key];
-    
-    if (isExistInMemory) {
+    XCacheObject *finded = [super x_searchWithKey:key];
+    if (finded) {
+        [self x_updateCacheObjectVisitOrderAndVisitCount:finded];
         
-        
-        
-    } else {
-        
-        
+        //暂时不淘汰访问历史项，因为长度不好确定
+        [self.historyQueue x_enqueObject:key];
+        [self x_startScheduleHistoryQueue];
     }
-    
-    return nil;
+    return finded;
 }
 
 - (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
+    if (![self x_isConstainKeyInObjectMap:key]) {
+        [self x_updateCacheObjectVisitOrderAndVisitCount:object];
+        
+        //暂时不淘汰访问历史项，因为长度不好确定
+        [self.historyQueue x_enqueObject:key];
+        [self x_startScheduleHistoryQueue];
+    }
+    
+    [self x_cleaningCacheObjects];
 }
 
-- (void)x_cleaningCacheObjects:(BOOL)isArchive {
+- (void)x_cleaningCacheObjects {
+    
+}
 
+- (void)x_updateCacheObjectVisitOrderAndVisitCount:(XCacheObject *)cacheObject {
+    [self x_updateCacheObjectVisitOrder:cacheObject];
+    cacheObject.visitCount++;
+}
+
+/**
+ *  将historyQueue中的缓存项，访问次数超过k次的调入cacheQueue
+ */
+- (void)x_startScheduleHistoryQueue {
+    NSArray *historyCopy = [self.historyQueue copy];
+    for (int i = 0; i < historyCopy.count; i++) {
+        NSString *key = [historyCopy objectAtIndex:i];
+        XCacheObject *object = [[self.store objectMap] objectForKey:key];
+        if ([object visitCount] > _k) {
+            [self.cacheQueue x_enqueObject:key];
+        }
+    }
+}
+
+- (NSString *)findMinKeyInCacheQueue {
+    NSString *minKey = nil;
+    NSInteger minVisistOrder = INT_MAX;
+    NSArray *cacheCopy = [self.cacheQueue copy];
+    for (int i = 0; i < cacheCopy.count; i++) {
+        NSString *key = [cacheCopy objectAtIndex:i];
+        XCacheObject *object = [[self.store objectMap] objectForKey:key];
+        if (object.visitOrder < minVisistOrder) {
+            minVisistOrder = object.visitOrder;
+            minKey = key;
+        }
+    }
+    return minKey;
 }
 
 @end

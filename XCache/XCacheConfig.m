@@ -52,6 +52,10 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return 5;
 }
 
++ (BOOL)x_isArchiverWhenLose {
+    return YES;
+}
+
 #pragma mark -
 
 + (NSInteger)x_computeLifeTimeoutWithDuration:(NSInteger)duration {

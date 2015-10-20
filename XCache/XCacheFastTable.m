@@ -71,8 +71,8 @@
     [self.strategyIns x_cacheObject:object WithKey:key];
 }
 
-- (void)x_cleaningCacheObjectsInMomery:(BOOL)flag {
-    [self.strategyIns x_cleaningCacheObjects:flag];
+- (void)x_cleaningCacheObjectsInMomery {
+    [self.strategyIns x_cleaningCacheObjects];
 }
 
 #pragma mark - 

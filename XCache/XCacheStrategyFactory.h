@@ -44,7 +44,7 @@
 
 @end
 
-@interface XCacheStrategyLRU_KStrategy : XCacheStrategyBase
+@interface XCacheStrategyLRU_KStrategy : XCacheStrategyLRUStrategy
 
 - (instancetype)initWithK:(NSInteger)k;
 

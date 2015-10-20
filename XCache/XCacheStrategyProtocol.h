@@ -28,6 +28,6 @@
 /**
  * 清理内存在的缓存对象
  */
-- (void)x_cleaningCacheObjects:(BOOL)isArchive;
+- (void)x_cleaningCacheObjects;
 
 @end

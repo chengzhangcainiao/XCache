@@ -55,12 +55,12 @@
 /**
  *  使用key保存一个原始对象，并传入超时时间
  */
-- (void)saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration;
+- (void)x_saveObject:(id)object forKey:(NSString *)key expiredAfter:(NSInteger)duration;
 
 /**
  *  使用一个key，查找到一个XCacheObject实例，继而找到原始对象
  */
-- (XCacheObject *)loadObjectWithKey:(NSString *)key;
+- (XCacheObject *)x_loadObjectWithKey:(NSString *)key;
 
 /**
  *  使用key移除内存缓存项
