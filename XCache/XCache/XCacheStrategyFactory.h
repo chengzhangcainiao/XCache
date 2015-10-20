@@ -28,6 +28,8 @@
 @property (nonatomic, weak) XCacheFastTable *table;
 @property (nonatomic, weak) XCacheStore *store;
 
+- (BOOL)x_isConstainKeyInObjectMap:(NSString *)key;
+
 @end
 
 @interface XCacheStrategyFIFOStrategy : XCacheStrategyBase

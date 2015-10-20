@@ -78,6 +78,11 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     return self.table.store;
 }
 
+- (BOOL)x_isConstainKeyInObjectMap:(NSString *)key {
+    NSArray *keys = [[self.store objectMap] allKeys];
+    return [keys containsObject:key];
+}
+
 - (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
 
 - (void)x_cleaningCacheObjects:(BOOL)isArchive {}
@@ -139,7 +144,9 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 
 - (XCacheObject *)x_searchWithKey:(NSString *)key {
     
-    if ([[self.store.objectMap allKeys] containsObject:key]) {
+    BOOL isExistInMemory = [self x_isConstainKeyInObjectMap:key];
+    
+    if (isExistInMemory) {
         
         //内存中查找到XCacheObejct实例
         XCacheObject *finded = [self.store.objectMap objectForKey:key];
@@ -149,7 +156,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
             return nil;
         }
         
-        [self x_updateCacheObjectVisitOrderAndVisitCount:finded];
+        [self x_updateCacheObjectVisitOrder:finded];
         
         //NSData *data = [finded cacheData];
         //return [[XCacheObject alloc] initWithData:data];
@@ -163,7 +170,8 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         
         if ([NSFileManager x_existsItemAtPath:filePath]) {
             
-            //本地文件找到options字典的NSData缓存文件（options字典: 1)原始对象  2)超时时间）
+            //本地文件找到options字典的NSData缓存文件
+            //（options字典: 1)原始对象  2)超时时间）
             NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
             
             //将NSData保存到一个新的的XcacheObeject实例中
@@ -176,16 +184,17 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
             
             //判断是否载入到内存
             if ([self.store x_isCanLoadCacheObjectToMemory]) {
-                
-                //这句会引起死锁，也没必要，因为此时的XCacheObject实例，是从本地文件恢复的，肯定是带有超时设置的
                 /*
+                 这句会引起死锁，也没必要。因为此时的XCacheObject实例，
+                 是从本地文件恢复的，肯定是带有超时设置的。
+                 
                  [self.store saveObject:objectFinded forKey:key expiredAfter:[XCacheConfig maxCacheOnMemoryTime]];
                  */
                 
                 //载入到内存
                 [[self.store objectMap] setObject:objectFinded forKey:key];
                 
-                [self x_updateCacheObjectVisitOrderAndVisitCount:objectFinded];
+                [self x_updateCacheObjectVisitOrder:objectFinded];
                 
                 [NSFileManager x_removeItemAtPath:filePath];
             }
@@ -201,8 +210,6 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 }
 
 - (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    
-    //按照LRU替换算法，清理内存对象
     [self x_cleaningCacheObjects:YES];
 }
 
@@ -258,7 +265,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
  *  循环处理_currentVisitCount，防止数字过大
  */
 - (void)x_recycleCurrentVisitOrder {
-//    if (_currentVisitCount < 0) {
+    
     //遍历objectMap保存的CacheObject实例，按照visitOrder从小到大排序
     NSArray *resultArray = [[self.store.objectMap allValues] sortedArrayUsingComparator:^NSComparisonResult(XCacheObject *obj1, XCacheObject *obj2) {
         return (NSComparisonResult)MIN(1, MAX(-1, obj1.visitOrder - obj2.visitOrder));
@@ -272,7 +279,6 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     
     //重新赋值循环处理后的最大的index
     _currentVisitCount = index;
-//    }
 }
 
 - (void)x_findMinOderAndMinCountCacheObjectForKey:(id *)key_p
@@ -315,14 +321,13 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     *order_p = minOrder;
 }
 
-- (void)x_updateCacheObjectVisitOrderAndVisitCount:(XCacheObject *)cacheObject {
+- (void)x_updateCacheObjectVisitOrder:(XCacheObject *)cacheObject {
     
     //修改找到的对象的顺序值
     cacheObject.visitOrder = _currentVisitCount++;
-    [self x_recycleCurrentVisitOrder];
     
-    //增加缓存项被访问的次数
-    //cacheObject.visitCount++;
+    //循环处理
+    [self x_recycleCurrentVisitOrder];
 }
 
 @end
@@ -360,6 +365,30 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         _currentVisitCount = 0;
     }
     return self;
+}
+
+- (XCacheObject *)x_searchWithKey:(NSString *)key {
+    
+    BOOL isExistInMemory = [self x_isConstainKeyInObjectMap:key];
+    
+    if (isExistInMemory) {
+        
+        
+        
+    } else {
+        
+        
+    }
+    
+    return nil;
+}
+
+- (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
+    
+}
+
+- (void)x_cleaningCacheObjects:(BOOL)isArchive {
+
 }
 
 @end

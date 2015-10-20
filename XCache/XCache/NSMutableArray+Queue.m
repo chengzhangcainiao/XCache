@@ -9,26 +9,11 @@
 #import "NSMutableArray+Queue.h"
 #import "NSArray+XCache.h"
 
-@interface NSMutableArray ()
-@property (nonatomic, assign) NSInteger x_length;
-@end
-
 @implementation NSMutableArray (Queue)
 
-+ (instancetype)x_instanceWithLength:(NSInteger)length {
-    NSMutableArray *queue = [[NSMutableArray alloc] init];
-    queue.x_length = length;
-    return queue;
-}
 
-- (id)x_enqueObject:(id)object {
-    if (self.count >= self.x_length) {
-        [self addObject:object];
-        return [self firstObject];
-    } else {
-        [self addObject:object];
-        return nil;
-    }
+- (void)x_enqueObject:(id)object {
+    [self addObject:object];
 }
 
 - (id)x_dequeObject {

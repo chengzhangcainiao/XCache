@@ -10,9 +10,7 @@
 
 @interface NSMutableArray (Queue)
 
-+ (instancetype)x_instanceWithLength:(NSInteger)length;
-
-- (id)x_enqueObject:(id)object;
+- (void)x_enqueObject:(id)object;
 - (id)x_dequeObject;
 
 -(id)x_peek:(int)index;

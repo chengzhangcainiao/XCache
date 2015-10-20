@@ -82,7 +82,7 @@
 }
 
 - (NSInteger)kCount {
-    return 3;
+    return 2;
 }
 
 @end
