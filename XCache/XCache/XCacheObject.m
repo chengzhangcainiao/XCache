@@ -44,20 +44,20 @@ NSString *const TargetObject          = @"TargetObject";
     if (self) {
         _visitOrder = 0;
         _visitCount = 0;
-        [self generateDataWithObject:aObject Duration:duration];
+        [self x_generateDataWithObject:aObject Duration:duration];
     }
     return self;
 }
 
-- (NSData *)cacheData {
+- (NSData *)x_cacheData {
     return _data;
 }
 
-- (NSInteger)cacheSize {
+- (NSInteger)x_cacheSize {
     return _data.length;
 }
 
-- (id)targetObjectInOptions {
+- (id)x_targetObjectInOptions {
     if (!_options) {
         _options = [NSKeyedUnarchiver unarchiveObjectWithData:self.data];
     }
@@ -71,7 +71,7 @@ NSString *const TargetObject          = @"TargetObject";
     return nil;
 }
 
-- (NSInteger)expirateTimestampInOptions {
+- (NSInteger)x_expirateTimestampInOptions {
     if (!self.options) {
         self.options = [NSKeyedUnarchiver unarchiveObjectWithData:self.data];
     }
@@ -84,9 +84,9 @@ NSString *const TargetObject          = @"TargetObject";
     return 0;
 }
 
-- (BOOL)isExpirate {
-    NSInteger expirateTime = [self expirateTimestampInOptions];
-    NSInteger nowTime = [XCacheConfig nowTimestamp];
+- (BOOL)x_isExpirate {
+    NSInteger expirateTime = [self x_expirateTimestampInOptions];
+    NSInteger nowTime = [XCacheConfig x_nowTimestamp];
     
     if (expirateTime == 0) {//为0表示没有超时设置
         return NO;
@@ -99,13 +99,13 @@ NSString *const TargetObject          = @"TargetObject";
     }
 }
 
-- (void)updateCacheObjectLifeDuration:(NSInteger)duration {
+- (void)x_updateCacheObjectLifeDuration:(NSInteger)duration {
     if (!self.options) {
         self.options = [NSKeyedUnarchiver unarchiveObjectWithData:self.data];
     }
     
     if ([[self.options allKeys] containsObject:ExpirateTimestamp]) {
-        duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
+        duration = [XCacheConfig x_computeLifeTimeoutWithDuration:duration];
         [self.options safeSetObject:@(duration) forKey:ExpirateTimestamp];
     }
 }
@@ -113,10 +113,10 @@ NSString *const TargetObject          = @"TargetObject";
 
 #pragma mark - tool
 
-- (void)generateDataWithObject:(id)aObject Duration:(NSInteger)duration {
+- (void)x_generateDataWithObject:(id)aObject Duration:(NSInteger)duration {
     
     //对象超时时间
-    duration = [XCacheConfig computeLifeTimeoutWithDuration:duration];
+    duration = [XCacheConfig x_computeLifeTimeoutWithDuration:duration];
     
     //options字典保存超时时间
     [self.options safeSetObject:@(duration) forKey:ExpirateTimestamp];

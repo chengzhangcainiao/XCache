@@ -42,7 +42,7 @@
 
 - (NSString *)rootPath {
     if (!_rootPath) {
-        _rootPath = [NSFileManager pathForRootDirectory];
+        _rootPath = [NSFileManager x_pathForRootDirectory];
     }
     return _rootPath;
 }
@@ -68,11 +68,11 @@
     return _lock;
 }
 
-- (NSNotificationCenter *)notificationCenter {
+- (NSNotificationCenter *)x_notificationCenter {
     return [NSNotificationCenter defaultCenter];
 }
 
-+ (instancetype)sharedInstance {
++ (instancetype)x_sharedInstance {
     static XCacheStore *storage = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -84,23 +84,23 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [self addObserveNotifications];
-        [self setupDatas];
+        [self x_addObserveNotifications];
+        [self x_setupDatas];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self.notificationCenter removeObserver:self];
+    [self.x_notificationCenter removeObserver:self];
 }
 
-- (void)resetMemoryRecord {
+- (void)x_resetMemoryRecord {
     self.memorySize = 0;
     self.memoryTotalCost = 0;
     [self.objectMap removeAllObjects];
 }
 
-- (void)setupDatas {
+- (void)x_setupDatas {
     
     _isArchivring = NO;
     _isUnArchivring = NO;
@@ -109,7 +109,7 @@
     _memorySize = 0;
     _memoryTotalCost = 0;
     
-    [self readDiskCurrentTotalCost];
+    [self x_readDiskCurrentTotalCost];
     
     _fastTable = [[XCacheFastTable alloc] initWithCacheStrategyType:XCacheStrategyTypeLRU CacheStore:self];
 }
@@ -137,19 +137,19 @@
         
         isNewer = YES;
         cacheObject = [[XCacheObject alloc] initWithObject:object Duration:duration];
-        newerSize = [cacheObject cacheSize];
+        newerSize = [cacheObject x_cacheSize];
         olderSize = 0;
         
     } else {//内存中存在缓存key，则替换传入的新的原始对象
         
         isNewer = NO;
-        olderSize = [cacheObject cacheSize];
+        olderSize = [cacheObject x_cacheSize];
         
         //替换找到的XcacheObject实例的data
-        [cacheObject generateDataWithObject:object Duration:duration];
+        [cacheObject x_generateDataWithObject:object Duration:duration];
         
         //再记录最新的缓存大小
-        newerSize = [cacheObject cacheSize];
+        newerSize = [cacheObject x_cacheSize];
     }
     
     [self.lock unlock];
@@ -157,7 +157,7 @@
     //判断当前是否，正在进行清理内存缓存对象 （如果是，就不把当前新的对象保存到内存，而直接写入本地，怕影响内存对象清理）
     if (_isArchivring) {
         //写入本地文件
-        [self dataWriteToRootFolderWithKey:key Data:cacheObject.data];
+        [self x_dataWriteToRootFolderWithKey:key Data:cacheObject.data];
     } else {
         //使用内存保存
         [self.objectMap safeSetObject:cacheObject forKey:key];
@@ -170,30 +170,30 @@
             self.memoryTotalCost += newerSize;
         }
         
-        [_fastTable setCacheObject:cacheObject WithKey:key];
+        [_fastTable x_setCacheObject:cacheObject WithKey:key];
     }
 }
 
 - (XCacheObject *)loadObjectWithKey:(NSString *)key {
-    return [_fastTable getCacheObjectWithKey:key];
+    return [_fastTable x_getCacheObjectWithKey:key];
 }
 
-- (void)removeCacheObjectWithKey:(NSString *)key {
-    [self removeMemoryCacheObject:nil WithKey:key];
+- (void)x_removeCacheObjectWithKey:(NSString *)key {
+    [self x_removeMemoryCacheObject:nil WithKey:key];
 }
 
 #pragma mark - 
 
-- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data {
+- (void)x_dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data {
     
     // 先删除存在的文件
-    [self removeDiskCacheFileWithKey:key];
+    [self x_removeDiskCacheFileWithKey:key];
     
     // 再将内容写入到新的文件
-    [data writeToFile:[NSFileManager pathForRootDirectoryWithPath:key] atomically:YES];
+    [data writeToFile:[NSFileManager x_pathForRootDirectoryWithPath:key] atomically:YES];
 }
 
-- (void)removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key {
+- (void)x_removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key {
     [self.lock lock];
     
     if (!(self.memorySize == 0)) {
@@ -205,31 +205,31 @@
     }
     
     if (!(self.memoryTotalCost == 0)) {
-        self.memoryTotalCost -= [cacheObj cacheSize];
+        self.memoryTotalCost -= [cacheObj x_cacheSize];
     }
     
     [self.objectMap removeObjectForKey:key];
     [self.lock unlock];
 }
 
-- (void)removeDiskCacheFileWithKey:(NSString *)key {
-    NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
+- (void)x_removeDiskCacheFileWithKey:(NSString *)key {
+    NSString *filePath = [NSFileManager x_pathForRootDirectoryWithPath:key];
     
-    BOOL isExist = [NSFileManager isFileItemAtPath:filePath];
+    BOOL isExist = [NSFileManager x_isFileItemAtPath:filePath];
     
     if (isExist) {
-        [NSFileManager removeItemAtPath:filePath error:nil];
+        [NSFileManager x_removeItemAtPath:filePath error:nil];
     }
 }
 
-- (void)removeAllDiskCacheFiles {
-    NSString *rootFolder = [NSFileManager pathForRootDirectory];
-    [NSFileManager removeFilesInDirectoryAtPath:rootFolder];
+- (void)x_removeAllDiskCacheFiles {
+    NSString *rootFolder = [NSFileManager x_pathForRootDirectory];
+    [NSFileManager x_removeFilesInDirectoryAtPath:rootFolder];
 }
 
 #pragma mark - 
 
-- (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id, id, BOOL *))block {
+- (void)x_enumerateKeysAndObjetcsUsingBlock:(void (^)(id, id, BOOL *))block {
     [self.lock lock];
     [self.objectMap enumerateKeysAndObjectsUsingBlock:block];
     [self.lock unlock];
@@ -248,19 +248,19 @@
 
 #pragma mark - 
 
-- (void)addObserveNotifications {
-    [self.notificationCenter addObserver:self selector:@selector(cleaningCachedObjects)
+- (void)x_addObserveNotifications {
+    [self.x_notificationCenter addObserver:self selector:@selector(cleaningCachedObjects)
                                     name:UIApplicationDidReceiveMemoryWarningNotification
                                   object:nil];
 }
 
-- (void)cleaningCachedObjects {
+- (void)x_cleaningCachedObjects {
     
     //接收到内存警告时，清理内存对象，包归档到磁盘文件
-    [_fastTable cleaningCacheObjectsInMomery:YES];
+    [_fastTable x_cleaningCacheObjectsInMomery:YES];
 }
 
-- (void)removeAllCachedObjects {
+- (void)x_removeAllCachedObjects {
     
     if (_isArchivring) {
         return;
@@ -274,33 +274,33 @@
         XCacheObject *obj = [self.objectMap objectForKey:key];
         
         //写入磁盘文件
-        [self dataWriteToRootFolderWithKey:key Data:[obj cacheData]];
+        [self x_dataWriteToRootFolderWithKey:key Data:[obj x_cacheData]];
         
         //内存删除
-        [self removeMemoryCacheObject:obj WithKey:key];
+        [self x_removeMemoryCacheObject:obj WithKey:key];
     }
     
-    [self resetMemoryRecord];
+    [self x_resetMemoryRecord];
     
     _isArchivring = NO;
 }
 
-- (void)readDiskCurrentTotalCost {//读取磁盘缓存文件大小
+- (void)x_readDiskCurrentTotalCost {//读取磁盘缓存文件大小
     
 }
 
-- (BOOL)isCanLoadCacheObjectToMemory {
+- (BOOL)x_isCanLoadCacheObjectToMemory {
     
     //如果当前进行内存清理，则不能对内存进行读写
     BOOL flag1 = !_isArchivring;
     
     //设置了内存最大花销 与  当前内存花销 < 设置的最大内存花销
-    BOOL flag2 = [XCacheConfig maxCacheOnMemoryCost] > 0;
-    BOOL flag3 = self.memoryTotalCost < [XCacheConfig maxCacheOnMemoryCost];
+    BOOL flag2 = [XCacheConfig x_maxCacheOnMemoryCost] > 0;
+    BOOL flag3 = self.memoryTotalCost < [XCacheConfig x_maxCacheOnMemoryCost];
     
     //设置了内存长度 与  当前内存长度 < 设置的最大内存长度
-    BOOL flag4 = [XCacheConfig maxCacheOnMemorySize] > 0;
-    BOOL flag5 = self.memorySize < [XCacheConfig maxCacheOnMemorySize];
+    BOOL flag4 = [XCacheConfig x_maxCacheOnMemorySize] > 0;
+    BOOL flag5 = self.memorySize < [XCacheConfig x_maxCacheOnMemorySize];
     
     return flag1 && flag2 && flag3 && flag4 && flag5;
 }

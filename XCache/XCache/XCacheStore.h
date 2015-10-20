@@ -45,12 +45,12 @@
 /**
  *  获取单例
  */
-+ (instancetype)sharedInstance;
++ (instancetype)x_sharedInstance;
 
 /**
  *  更换其他类型的XCacheFastTable
  */
-- (void)changeToFastTable:(XCacheFastTable *)aTable;
+- (void)x_changeToFastTable:(XCacheFastTable *)aTable;
 
 /**
  *  使用key保存一个原始对象，并传入超时时间
@@ -65,46 +65,46 @@
 /**
  *  使用key移除内存缓存项
  */
-- (void)removeCacheObjectWithKey:(NSString *)key;
+- (void)x_removeCacheObjectWithKey:(NSString *)key;
 
 /**
  *  强制删除当前内存缓存的所有对象
  */
-- (void)removeAllCachedObjects;
+- (void)x_removeAllCachedObjects;
 
 /**
  *  清理内存对象，直到当前缓存内存小于默认大小，对象归档到磁盘文件
  */
-- (void)cleaningCachedObjects;
+- (void)x_cleaningCachedObjects;
 
 /**
  *  判断是否可以将XCacheObject实例载入到内存
  */
-- (BOOL)isCanLoadCacheObjectToMemory;
+- (BOOL)x_isCanLoadCacheObjectToMemory;
 
 /**
  *  删除单个内存缓存对象
  */
-- (void)removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key;
+- (void)x_removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key;
 
 /**
  *  将NSData使用key作为文件名，写入磁盘文件
  */
-- (void)dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data;
+- (void)x_dataWriteToRootFolderWithKey:(NSString *)key Data:(NSData *)data;
 
 /**
  *  删除某一个key文件
  */
-- (void)removeDiskCacheFileWithKey:(NSString *)key;
+- (void)x_removeDiskCacheFileWithKey:(NSString *)key;
 
 /**
  *  删除本地所有缓存文件
  */
-- (void)removeAllDiskCacheFiles;
+- (void)x_removeAllDiskCacheFiles;
 
 /**
  *  遍历所有key和value
  */
-- (void)enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL *isStop))block;
+- (void)x_enumerateKeysAndObjetcsUsingBlock:(void (^)(id key, id object, BOOL *isStop))block;
 
 @end

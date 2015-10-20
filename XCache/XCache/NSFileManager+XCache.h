@@ -12,152 +12,152 @@
 
 @interface NSFileManager (XCache)
 
-+ (NSString *)rootFolder;
++ (NSString *)x_rootFolder;
 
 #pragma makr - Path
 
 //判断传入的全路径是系统中的六种路径（document、library、cache、temp、appsuport、mainBundle）下的子路径
-+(BOOL)assertPath:(NSString *)path;
-+(NSMutableArray *)absoluteDirectories;
-+(NSString *)absoluteDirectoryForPath:(NSString *)path;
-+(NSString *)absolutePath:(NSString *)path;//帮助修正传入的路径是不存在的路径
++(BOOL)x_assertPath:(NSString *)path;
++(NSMutableArray *)x_absoluteDirectories;
++(NSString *)x_absoluteDirectoryForPath:(NSString *)path;
++(NSString *)x_absolutePath:(NSString *)path;//帮助修正传入的路径是不存在的路径
 
-+(NSString *)pathForApplicationSupportDirectory;
-+(NSString *)pathForCachesDirectory;
-+(NSString *)pathForDocumentsDirectory;
-+(NSString *)pathForLibraryDirectory;
-+(NSString *)pathForTemporaryDirectory;
-+(NSString *)pathForMainBundleDirectory;
-+(NSString *)pathForRootDirectory;
++(NSString *)x_pathForApplicationSupportDirectory;
++(NSString *)x_pathForCachesDirectory;
++(NSString *)x_pathForDocumentsDirectory;
++(NSString *)x_pathForLibraryDirectory;
++(NSString *)x_pathForTemporaryDirectory;
++(NSString *)x_pathForMainBundleDirectory;
++(NSString *)x_pathForRootDirectory;
 
-+(NSString *)pathForApplicationSupportDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForCachesDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForDocumentsDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForLibraryDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForMainBundleDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForPlistNamed:(NSString *)name;
-+(NSString *)pathForTemporaryDirectoryWithPath:(NSString *)path;
-+(NSString *)pathForRootDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForApplicationSupportDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForCachesDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForDocumentsDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForLibraryDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForMainBundleDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForPlistNamed:(NSString *)name;
++(NSString *)x_pathForTemporaryDirectoryWithPath:(NSString *)path;
++(NSString *)x_pathForRootDirectoryWithPath:(NSString *)path;
 
 #pragma makr - 文件大小、创建、移动or重命令
 
-+ (NSNumber *)fileSizeWithFilepath:(NSString *)filePath;
++ (NSNumber *)x_fileSizeWithFilepath:(NSString *)filePath;
 
-+(BOOL)createDirectoriesForFileAtPath:(NSString *)path;
-+(BOOL)createDirectoriesForFileAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_createDirectoriesForFileAtPath:(NSString *)path;
++(BOOL)x_createDirectoriesForFileAtPath:(NSString *)path error:(NSError **)error;
 
-+(BOOL)createDirectoriesForPath:(NSString *)path;
-+(BOOL)createDirectoriesForPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_createDirectoriesForPath:(NSString *)path;
++(BOOL)x_createDirectoriesForPath:(NSString *)path error:(NSError **)error;
 
-+(BOOL)createFileAtPath:(NSString *)path;
-+(BOOL)createFileAtPath:(NSString *)path error:(NSError **)error;
-+(BOOL)createFileAtPath:(NSString *)path withContent:(NSObject *)content;
-+(BOOL)createFileAtPath:(NSString *)path withContent:(NSObject *)content error:(NSError **)error;
++(BOOL)x_createFileAtPath:(NSString *)path;
++(BOOL)x_createFileAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_createFileAtPath:(NSString *)path withContent:(NSObject *)content;
++(BOOL)x_createFileAtPath:(NSString *)path withContent:(NSObject *)content error:(NSError **)error;
 
 #pragma mark - 移动
 
-+(BOOL)moveItemAtPath:(NSString *)path toPath:(NSString *)toPath;
-+(BOOL)moveItemAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
++(BOOL)x_moveItemAtPath:(NSString *)path toPath:(NSString *)toPath;
++(BOOL)x_moveItemAtPath:(NSString *)path toPath:(NSString *)toPath error:(NSError **)error;
 
 #pragma mark - 删除
 
 //直接删除目录下的所有文件
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path;
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path error:(NSError **)error;
 
 //直接删除目录下的文件扩展名对应的文件
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension;
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension error:(NSError **)error;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension error:(NSError **)error;
 
 //直接删除目录下的文件名前缀对应的文件
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix;
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix error:(NSError **)error;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix error:(NSError **)error;
 
 //直接删除目录下的文件名后缀对应的文件
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix;
-+(BOOL)removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix error:(NSError **)error;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix;
++(BOOL)x_removeFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix error:(NSError **)error;
 
 //直接删除目录下的文件or文件夹
-+(BOOL)removeItemsInDirectoryAtPath:(NSString *)path;
-+(BOOL)removeItemsInDirectoryAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_removeItemsInDirectoryAtPath:(NSString *)path;
++(BOOL)x_removeItemsInDirectoryAtPath:(NSString *)path error:(NSError **)error;
 
 //直接删除目录下某个项
-+(BOOL)removeItemAtPath:(NSString *)path;
-+(BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_removeItemAtPath:(NSString *)path;
++(BOOL)x_removeItemAtPath:(NSString *)path error:(NSError **)error;
 
 #pragma mark - 是否存在、是否是文件夹、是否是文件
 
-+(BOOL)existsItemAtPath:(NSString *)path;
++(BOOL)x_existsItemAtPath:(NSString *)path;
 
-+(BOOL)isFileItemAtPath:(NSString *)path;
-+(BOOL)isFileItemAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_isFileItemAtPath:(NSString *)path;
++(BOOL)x_isFileItemAtPath:(NSString *)path error:(NSError **)error;
 
-+(BOOL)isDirectoryItemAtPath:(NSString *)path;
-+(BOOL)isDirectoryItemAtPath:(NSString *)path error:(NSError **)error;
++(BOOL)x_isDirectoryItemAtPath:(NSString *)path;
++(BOOL)x_isDirectoryItemAtPath:(NSString *)path error:(NSError **)error;
 
 #pragma mark - 遍历目录下的子项
 
 //遍历指定目录下的所有的子目录或子文件（需要deep遍历才有其他子文件、目录）
-+(NSArray *)listDirectoriesInDirectoryAtPath:(NSString *)path;
-+(NSArray *)listDirectoriesInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
++(NSArray *)x_listDirectoriesInDirectoryAtPath:(NSString *)path;
++(NSArray *)x_listDirectoriesInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
 
 //遍历指定目录下的所有的文件
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path;
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
 
 //遍历指定目录下的所有的文件，并且符合指定的扩展名
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension;
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension deep:(BOOL)deep;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withExtension:(NSString *)extension deep:(BOOL)deep;
 
 //遍历指定目录下的所有的文件，并且符合指定的前缀
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix;
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix deep:(BOOL)deep;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withPrefix:(NSString *)prefix deep:(BOOL)deep;
 
 //遍历指定目录下的所有的文件，并且符合指定的后缀
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix;
-+(NSArray *)listFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix deep:(BOOL)deep;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix;
++(NSArray *)x_listFilesInDirectoryAtPath:(NSString *)path withSuffix:(NSString *)suffix deep:(BOOL)deep;
 
 //遍历指定目录下的所有的项（文件、文件夹）
-+(NSArray *)listItemsInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
++(NSArray *)x_listItemsInDirectoryAtPath:(NSString *)path deep:(BOOL)deep;
 
 #pragma makr - 获取文件的属性
 
-+(id)attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key;
-+(id)attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key error:(NSError **)error;
-+(NSDictionary *)attributesOfItemAtPath:(NSString *)path;
-+(NSDictionary *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error;
++(id)x_attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key;
++(id)x_attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key error:(NSError **)error;
++(NSDictionary *)x_attributesOfItemAtPath:(NSString *)path;
++(NSDictionary *)x_attributesOfItemAtPath:(NSString *)path error:(NSError **)error;
 
 #pragma mark - 万能写入
 
-+(BOOL)writeFileAtPath:(NSString *)path content:(id)content;
-+(BOOL)writeFileAtPath:(NSString *)path content:(id)content error:(NSError **)error;
++(BOOL)x_writeFileAtPath:(NSString *)path content:(id)content;
++(BOOL)x_writeFileAtPath:(NSString *)path content:(id)content error:(NSError **)error;
 
 #pragma mark - 读取文件
 
-+ (NSString *)readFileAsStringWithPath:(NSString *)path;
-+ (NSString *)readFileAsStringWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
++ (NSString *)x_readFileAsStringWithPath:(NSString *)path;
++ (NSString *)x_readFileAsStringWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
 
-+ (NSArray *)readFileAsArrayWithPath:(NSString *)path;
-+ (NSMutableArray *)readFileAsMutableArrayWithPath:(NSString *)path;
++ (NSArray *)x_readFileAsArrayWithPath:(NSString *)path;
++ (NSMutableArray *)x_readFileAsMutableArrayWithPath:(NSString *)path;
 
-+ (NSObject *)readFileAsObjectWithPath:(NSString *)path;
++ (NSObject *)x_readFileAsObjectWithPath:(NSString *)path;
 
-+ (NSData *)readFileAsDataWithPath:(NSString *)path;
-+ (NSData *)readFileAsDataWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
++ (NSData *)x_readFileAsDataWithPath:(NSString *)path;
++ (NSData *)x_readFileAsDataWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
 + (NSMutableData *)readFileAsMutableDataWithPath:(NSString *)path;
 + (NSMutableData *)readFileAsMutableDataWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
 
-+ (NSDictionary *)readFileAtPathAsDictionary:(NSString *)path;
-+ (NSMutableDictionary *)readFileAtPathAsMutableDictionary:(NSString *)path;
++ (NSDictionary *)x_readFileAtPathAsDictionary:(NSString *)path;
++ (NSMutableDictionary *)x_readFileAtPathAsMutableDictionary:(NSString *)path;
 
-+ (UIImage *)readFileAsImageWithPath:(NSString *)path;
-+ (UIImage *)readFileAsImageWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;;
++ (UIImage *)x_readFileAsImageWithPath:(NSString *)path;
++ (UIImage *)x_readFileAsImageWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;;
 
-+ (UIImage *)readFileAsImageViewWithPath:(NSString *)path;
-+ (UIImage *)readFileAsImageViewWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
++ (UIImage *)x_readFileAsImageViewWithPath:(NSString *)path;
++ (UIImage *)x_readFileAsImageViewWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
 
-+(NSJSONSerialization *)readFileAsJSONWithPath:(NSString *)path;
-+(NSJSONSerialization *)readFileAsJSONWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
++(NSJSONSerialization *)x_readFileAsJSONWithPath:(NSString *)path;
++(NSJSONSerialization *)x_readFileAsJSONWithPath:(NSString *)path Error:(NSError *__autoreleasing*)error;
 
 
 

@@ -14,13 +14,5 @@
 
 @property (nonatomic, assign) BOOL isAutoArchiveToDiskFileWhenOverThanMaxCacheCount;
 
-- (NSArray *)peekAllCachedObjects;
-- (id)peekHeadObejct;
-- (id)peekTailObejct;
-
-- (NSInteger)currentCachedCount;
-
-- (id)enqueObject:(id)object;
-- (id)dequeObject;
 
 @end

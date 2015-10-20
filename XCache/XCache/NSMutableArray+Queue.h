@@ -10,13 +10,15 @@
 
 @interface NSMutableArray (Queue)
 
-- (void)enqueObject:(id)object;
-- (id)dequeObject;
++ (instancetype)x_instanceWithLength:(NSInteger)length;
 
--(id) peek:(int)index;
--(id) peekHead;
--(id) peekTail;
+- (id)x_enqueObject:(id)object;
+- (id)x_dequeObject;
 
-- (BOOL)isEmpty;
+-(id)x_peek:(int)index;
+-(id)x_peekHead;
+-(id)x_peekTail;
+
+- (BOOL)x_isEmpty;
 
 @end

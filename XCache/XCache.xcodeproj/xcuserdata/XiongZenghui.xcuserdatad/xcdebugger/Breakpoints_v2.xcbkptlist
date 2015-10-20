@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
             endingLineNumber = "50"
-            landmarkName = "-saveObject:ForKey:Timeout:"
+            landmarkName = "-x_saveObject:ForKey:Timeout:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -31,7 +31,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
             endingLineNumber = "48"
-            landmarkName = "-saveObject:ForKey:Timeout:"
+            landmarkName = "-x_saveObject:ForKey:Timeout:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

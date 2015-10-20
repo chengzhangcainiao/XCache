@@ -25,7 +25,7 @@
 
 - (XCache *)cache {
     if (!_cache) {
-        _cache = [XCache sharedInstance];
+        _cache = [XCache x_sharedInstance];
     }
     return _cache;
 }
@@ -102,7 +102,7 @@
 
 - (void)testCache {
     
-    NSString *rootPath = [NSFileManager pathForRootDirectory];
+    NSString *rootPath = [NSFileManager x_pathForRootDirectory];
     
 //    Person *p = [[Person alloc] init];
 //    p.age = 10;
@@ -117,7 +117,7 @@
         
         NSString *key = [NSString stringWithFormat:@"person%d", i];
         
-        [self.cache saveObject:p ForKey:key Timeout:5];
+        [self.cache x_saveObject:p ForKey:key Timeout:5];
     }
     
 }

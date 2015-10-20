@@ -20,30 +20,30 @@
 
 @property (nonatomic, copy)void (^onRemoveFromMemory)(id object);
 
-+ (instancetype)sharedInstance;
++ (instancetype)x_sharedInstance;
 
 #pragma mark - normal 【如果是自定义类对象，必须实现NSCoding协议】
-- (void)saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time;
-- (id)getObjectWithKey:(NSString *)key;
-- (void)removeObjectWithKey:(NSString *)key;
+- (void)x_saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time;
+- (id)x_getObjectWithKey:(NSString *)key;
+- (void)x_removeObjectWithKey:(NSString *)key;
 
 #pragma mark - queue
-- (XCacheQueue *)addQueueWithIdentifier:(NSString *)identify
-                         MaxMemoryCount:(NSInteger)count
-                    IsAutoArchiveToDisk:(BOOL)isAutoArchive;
+- (XCacheQueue *)x_addQueueWithIdentifier:(NSString *)identify
+                           MaxMemoryCount:(NSInteger)count
+                      IsAutoArchiveToDisk:(BOOL)isAutoArchive;
 
-- (XCacheQueue *)findQueueByIdentifier:(NSString *)identify;
-- (void)pushObjct:(id)object ToQueueWithIdentifier:(NSString *)identifier;
-- (id)popObjectFromQueueWithIdentifier:(NSString *)identifier;
+- (XCacheQueue *)x_findQueueByIdentifier:(NSString *)identify;
+- (void)x_pushObjct:(id)object ToQueueWithIdentifier:(NSString *)identifier;
+- (id)x_popObjectFromQueueWithIdentifier:(NSString *)identifier;
 
 #pragma mark - pool
-- (XCachePool *)addPoolWithIdentifier:(NSString *)identify
+- (XCachePool *)x_addPoolWithIdentifier:(NSString *)identify
                        MaxMemoryCount:(NSInteger)count;
 
-- (XCachePool *)findPoolByIdentifier:(NSString *)identify;
-- (id)getObjectFromPoolWithIdentifier:(NSString *)identify;
+- (XCachePool *)x_findPoolByIdentifier:(NSString *)identify;
+- (id)x_getObjectFromPoolWithIdentifier:(NSString *)identify;
 
-- (void)removeObjectWithKey:(NSString *)key;
-- (void)removeAllObjects;
+- (void)x_removeObjectWithKey:(NSString *)key;
+- (void)x_removeAllObjects;
 
 @end

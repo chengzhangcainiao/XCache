@@ -19,12 +19,12 @@
 
 - (XCacheStore *)store {
     if (!_store) {
-        _store = [XCacheStore sharedInstance];
+        _store = [XCacheStore x_sharedInstance];
     }
     return _store;
 }
 
-+ (instancetype)sharedInstance {
++ (instancetype)x_sharedInstance {
     static XCache *cache = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -41,7 +41,7 @@
     return self;
 }
 
-- (void)saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time {
+- (void)x_saveObject:(id)object ForKey:(NSString *)key Timeout:(NSInteger)time {
     if (!object || [object isEqual:[NSNull null]] || !key || [key isEqualToString:@""]) {
         return;
     }
@@ -50,12 +50,12 @@
     
 }
 
-- (id)getObjectWithKey:(NSString *)key {
+- (id)x_getObjectWithKey:(NSString *)key {
     return [self.store loadObjectWithKey:key];
 }
 
-- (void)removeObjectWithKey:(NSString *)key {
-    [self.store removeCacheObjectWithKey:key];
+- (void)x_removeObjectWithKey:(NSString *)key {
+    [self.store x_removeCacheObjectWithKey:key];
 }
 
 @end

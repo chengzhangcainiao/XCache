@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, XCacheStrategyType){
 /**
  *  使用自定义缓存算法
  */
-- (void)registCustomer:(id<XCacheStrategyProtocol>)exchange;
+- (void)x_registCustomer:(id<XCacheStrategyProtocol>)exchange;
 
 /**
  *  修改返回值，确定LRU_K算法中的k值
@@ -67,8 +67,8 @@ typedef NS_ENUM(NSInteger, XCacheStrategyType){
                                CacheStore:(XCacheStore *)store;
 
 
-- (XCacheObject *)getCacheObjectWithKey:(NSString *)key;
-- (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key;
-- (void)cleaningCacheObjectsInMomery:(BOOL)flag;
+- (XCacheObject *)x_getCacheObjectWithKey:(NSString *)key;
+- (void)x_setCacheObject:(XCacheObject *)object WithKey:(NSString *)key;
+- (void)x_cleaningCacheObjectsInMomery:(BOOL)flag;
 
 @end

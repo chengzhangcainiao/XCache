@@ -78,11 +78,11 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     return self.table.store;
 }
 
-- (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
+- (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {}
 
-- (void)cleaningCacheObjects:(BOOL)isArchive {}
+- (void)x_cleaningCacheObjects:(BOOL)isArchive {}
 
-- (XCacheObject *)searchWithKey:(NSString *)key{return nil;}
+- (XCacheObject *)x_searchWithKey:(NSString *)key{return nil;}
 
 @end
 
@@ -137,7 +137,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     return self;
 }
 
-- (XCacheObject *)searchWithKey:(NSString *)key {
+- (XCacheObject *)x_searchWithKey:(NSString *)key {
     
     if ([[self.store.objectMap allKeys] containsObject:key]) {
         
@@ -145,11 +145,11 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         XCacheObject *finded = [self.store.objectMap objectForKey:key];
         
         //是否超时
-        if ([finded isExpirate]) {
+        if ([finded x_isExpirate]) {
             return nil;
         }
         
-        [self updateCacheObjectVisitOrderAndVisitCount:finded];
+        [self x_updateCacheObjectVisitOrderAndVisitCount:finded];
         
         //NSData *data = [finded cacheData];
         //return [[XCacheObject alloc] initWithData:data];
@@ -159,9 +159,9 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     } else {
         
         //从本地文件查找
-        NSString *filePath = [NSFileManager pathForRootDirectoryWithPath:key];
+        NSString *filePath = [NSFileManager x_pathForRootDirectoryWithPath:key];
         
-        if ([NSFileManager existsItemAtPath:filePath]) {
+        if ([NSFileManager x_existsItemAtPath:filePath]) {
             
             //本地文件找到options字典的NSData缓存文件（options字典: 1)原始对象  2)超时时间）
             NSData *dataFinded = [[NSData alloc] initWithContentsOfFile:filePath];
@@ -170,12 +170,12 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
             XCacheObject *objectFinded = [[XCacheObject alloc] initWithData:dataFinded];
             
             //是否超时
-            if ([objectFinded isExpirate]) {
+            if ([objectFinded x_isExpirate]) {
                 return nil;
             }
             
             //判断是否载入到内存
-            if ([self.store isCanLoadCacheObjectToMemory]) {
+            if ([self.store x_isCanLoadCacheObjectToMemory]) {
                 
                 //这句会引起死锁，也没必要，因为此时的XCacheObject实例，是从本地文件恢复的，肯定是带有超时设置的
                 /*
@@ -185,9 +185,9 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
                 //载入到内存
                 [[self.store objectMap] setObject:objectFinded forKey:key];
                 
-                [self updateCacheObjectVisitOrderAndVisitCount:objectFinded];
+                [self x_updateCacheObjectVisitOrderAndVisitCount:objectFinded];
                 
-                [NSFileManager removeItemAtPath:filePath];
+                [NSFileManager x_removeItemAtPath:filePath];
             }
             
             return objectFinded;
@@ -200,20 +200,20 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     }
 }
 
-- (void)cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
+- (void)x_cacheObject:(XCacheObject *)object WithKey:(NSString *)key {
     
     //按照LRU替换算法，清理内存对象
-    [self cleaningCacheObjects:YES];
+    [self x_cleaningCacheObjects:YES];
 }
 
-- (void)cleaningCacheObjects:(BOOL)isArchive {
+- (void)x_cleaningCacheObjects:(BOOL)isArchive {
     [self.lock lock];
     
     NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
     
-    NSInteger maxCount = [XCacheConfig maxCacheOnMemorySize];
+    NSInteger maxCount = [XCacheConfig x_maxCacheOnMemorySize];
     
-    NSInteger maxCost = [XCacheConfig maxCacheOnMemoryCost];
+    NSInteger maxCost = [XCacheConfig x_maxCacheOnMemoryCost];
     
     //将淘汰的对象写入磁盘文件
     isArchive = YES;
@@ -231,18 +231,18 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
         id oldestkey = @"";
         
         //查询最小的
-        [self findMinOderAndMinCountCacheObjectForKey:&oldestkey Object:&oldestObject Order_p:&oldestOrder];
+        [self x_findMinOderAndMinCountCacheObjectForKey:&oldestkey Object:&oldestObject Order_p:&oldestOrder];
         
         //找到了久未使用的缓存项
         if (oldestkey) {
             
             //判断是否写入磁盘文件
             if (isArchive) {
-                [self.store dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject cacheData]];
+                [self.store x_dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject x_cacheData]];
             }
             
             //从内存删除
-            [self.store removeMemoryCacheObject:oldestObject WithKey:oldestkey];
+            [self.store x_removeMemoryCacheObject:oldestObject WithKey:oldestkey];
             
             //遍历数组移除key
             [keys removeObject:oldestkey];
@@ -257,7 +257,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 /**
  *  循环处理_currentVisitCount，防止数字过大
  */
-- (void)recycleCurrentVisitOrder {
+- (void)x_recycleCurrentVisitOrder {
 //    if (_currentVisitCount < 0) {
     //遍历objectMap保存的CacheObject实例，按照visitOrder从小到大排序
     NSArray *resultArray = [[self.store.objectMap allValues] sortedArrayUsingComparator:^NSComparisonResult(XCacheObject *obj1, XCacheObject *obj2) {
@@ -275,7 +275,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 //    }
 }
 
-- (void)findMinOderAndMinCountCacheObjectForKey:(id *)key_p
+- (void)x_findMinOderAndMinCountCacheObjectForKey:(id *)key_p
                                          Object:(XCacheObject **)obj_p
                                         Order_p:(NSInteger *)order_p
 {
@@ -315,11 +315,11 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     *order_p = minOrder;
 }
 
-- (void)updateCacheObjectVisitOrderAndVisitCount:(XCacheObject *)cacheObject {
+- (void)x_updateCacheObjectVisitOrderAndVisitCount:(XCacheObject *)cacheObject {
     
     //修改找到的对象的顺序值
     cacheObject.visitOrder = _currentVisitCount++;
-    [self recycleCurrentVisitOrder];
+    [self x_recycleCurrentVisitOrder];
     
     //增加缓存项被访问的次数
     //cacheObject.visitCount++;
@@ -329,12 +329,29 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 
 @interface XCacheStrategyLRU_KStrategy ()
 
-@property (nonatomic, assign)NSInteger currentVisitCount;
-@property (nonatomic, assign)NSInteger k;
+@property (nonatomic, assign) NSInteger currentVisitCount;
+@property (nonatomic, assign) NSInteger k;
+
+@property (nonatomic, strong) NSMutableArray *historyQueue;
+@property (nonatomic, strong) NSMutableArray *cacheQueue;
 
 @end
 
 @implementation XCacheStrategyLRU_KStrategy
+
+- (NSMutableArray *)historyQueue {
+    if (!_historyQueue) {
+        _historyQueue = [[NSMutableArray alloc] init];
+    }
+    return _historyQueue;
+}
+
+- (NSMutableArray *)cacheQueue {
+    if (!_cacheQueue) {
+        _cacheQueue = [[NSMutableArray alloc] init];
+    }
+    return _cacheQueue;
+}
 
 - (instancetype)initWithK:(NSInteger)k {
     self = [super init];

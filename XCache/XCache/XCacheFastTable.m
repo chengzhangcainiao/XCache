@@ -19,7 +19,7 @@
 
 @implementation XCacheFastTable
 
-- (void)setupStrategy:(XCacheStrategyType)type {
+- (void)x_setupStrategy:(XCacheStrategyType)type {
     _cacheStrategyType = type;
     
     switch (_cacheStrategyType) {
@@ -55,7 +55,7 @@
 {
     self = [super init];
     if (self) {
-        [self setupStrategy:type];
+        [self x_setupStrategy:type];
         _store = store;
     }
     return self;
@@ -63,21 +63,21 @@
 
 #pragma mark - 
 
-- (XCacheObject *)getCacheObjectWithKey:(NSString *)key {
-    return [self.strategyIns searchWithKey:key];
+- (XCacheObject *)x_getCacheObjectWithKey:(NSString *)key {
+    return [self.strategyIns x_searchWithKey:key];
 }
 
-- (void)setCacheObject:(XCacheObject *)object WithKey:(NSString *)key {
-    [self.strategyIns cacheObject:object WithKey:key];
+- (void)x_setCacheObject:(XCacheObject *)object WithKey:(NSString *)key {
+    [self.strategyIns x_cacheObject:object WithKey:key];
 }
 
-- (void)cleaningCacheObjectsInMomery:(BOOL)flag {
-    [self.strategyIns cleaningCacheObjects:flag];
+- (void)x_cleaningCacheObjectsInMomery:(BOOL)flag {
+    [self.strategyIns x_cleaningCacheObjects:flag];
 }
 
 #pragma mark - 
 
-- (void)registCustomer:(id<XCacheStrategyProtocol>)exchange {
+- (void)x_registCustomer:(id<XCacheStrategyProtocol>)exchange {
     
 }
 

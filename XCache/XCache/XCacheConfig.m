@@ -12,59 +12,59 @@ static NSString *XCacheFolderName = @"XCacheObjects";
 
 @implementation XCacheConfig
 
-+ (NSString *)rootFolderName {
++ (NSString *)x_rootFolderName {
     return XCacheFolderName;
 }
 
-+ (NSInteger)maxCacheOnMemoryTime {
++ (NSInteger)x_maxCacheOnMemoryTime {
     return 86400;//一天
 }
 
-+ (NSInteger)maxCacheOnDiskTime {
++ (NSInteger)x_maxCacheOnDiskTime {
     return 7 * 86400;//一周
 }
 
-+ (NSInteger)defaultMaxQueueSize {
++ (NSInteger)x_defaultMaxQueueSize {
 //    return 20;
     return 5;
 }
 
-+ (NSInteger)defaultMaxPoolSize {
++ (NSInteger)x_defaultMaxPoolSize {
     return 20;
 }
 
-+ (NSInteger)maxCacheOnMemorySize {
++ (NSInteger)x_maxCacheOnMemorySize {
 //    return 100;
     return 5;
 }
 
-+ (NSInteger)maxCacheOnMemoryCost {
++ (NSInteger)x_maxCacheOnMemoryCost {
 //    return 50 * 1024 *1024;//50M
     return 5 * 1024;
 }
 
-+ (NSInteger)maxCacheOnDiskCost {
++ (NSInteger)x_maxCacheOnDiskCost {
     return 200 * 1024 *1024;//200M
 }
 
-+ (NSInteger)cycleArchiveTime {
++ (NSInteger)x_cycleArchiveTime {
 //    return 10;
     return 5;
 }
 
 #pragma mark -
 
-+ (NSInteger)computeLifeTimeoutWithDuration:(NSInteger)duration {
++ (NSInteger)x_computeLifeTimeoutWithDuration:(NSInteger)duration {
     // 过期时间 = 当前时间 + 持续时间
-    duration = (duration > 0) ? duration : [self maxCacheOnMemoryTime];
-    return [self nowTimestamp] + duration;
+    duration = (duration > 0) ? duration : [self x_maxCacheOnMemoryTime];
+    return [self x_nowTimestamp] + duration;
 }
 
-+ (NSInteger)nowTimestamp {
++ (NSInteger)x_nowTimestamp {
     return (NSInteger)ceil([[NSDate date] timeIntervalSince1970]); 
 }
 
-- (NSString *)encodedString:(NSString *)string
+- (NSString *)x_encodedString:(NSString *)string
 {
     if (![string length])
         return @"";
@@ -78,7 +78,7 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return (__bridge_transfer NSString *)escapedString;
 }
 
-- (NSString *)decodedString:(NSString *)string
+- (NSString *)x_decodedString:(NSString *)string
 {
     if (![string length])
         return @"";

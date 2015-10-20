@@ -31,41 +31,48 @@
 @property (nonatomic, assign) NSInteger visitCount;
 
 /**
- *	从读取缓存原始对象
+ *	读取缓存
  */
 - (instancetype)initWithData:(NSData *)data;
 
 /**
- *	将原始对象保存到缓存
+ *	写入缓存
  */
 - (instancetype)initWithObject:(id)aObject Duration:(NSInteger)duration;
 
-- (NSData *)cacheData;
-- (NSInteger)cacheSize;
+/**
+ *  获取options字典转换成的NSData
+ */
+- (NSData *)x_cacheData;
+
+/**
+ *  获取NSData长度
+ */
+- (NSInteger)x_cacheSize;
 
 /**
  *	获取XCacheObject实例中options字典保存的原始对象
  */
-- (id)targetObjectInOptions;
+- (id)x_targetObjectInOptions;
 
 /**
  *	获取XCacheObject实例中options字典保存的缓存超时时间
  */
-- (NSInteger)expirateTimestampInOptions;
+- (NSInteger)x_expirateTimestampInOptions;
 
 /**
  *	更新缓存超时时间
  */
-- (void)updateCacheObjectLifeDuration:(NSInteger)duration;
+- (void)x_updateCacheObjectLifeDuration:(NSInteger)duration;
 
 /**
  *  使用新的原始对象和缓存超时，创建新的NSData
  */
-- (void)generateDataWithObject:(id)aObject Duration:(NSInteger)duration;
+- (void)x_generateDataWithObject:(id)aObject Duration:(NSInteger)duration;
 
 /**
  *	是否已经超时
  */
-- (BOOL)isExpirate;
+- (BOOL)x_isExpirate;
 
 @end
