@@ -47,11 +47,12 @@
     return _rootPath;
 }
 
-- (NSMutableArray *)keyList {
-    if (!_keyList) {
-        _keyList = [[NSMutableArray alloc] init];
-    }
-    return _keyList;
+- (NSArray *)keyList {
+    return [self.objectMap allKeys];
+}
+
+- (NSArray *)valueList {
+    return [self.objectMap allValues];
 }
 
 - (NSMutableDictionary *)objectMap {
@@ -191,24 +192,31 @@
     
     // 再将内容写入到新的文件
     [data writeToFile:[NSFileManager x_pathForRootDirectoryWithPath:key] atomically:YES];
+    
+    //注意: 这里如果读取到了旧的缓存文件，可能造成崩溃，需要做版本处理
 }
 
 - (void)x_removeMemoryCacheObject:(XCacheObject *)cacheObj WithKey:(NSString *)key {
     [self.lock lock];
     
+    //修正内存长度
     if (!(self.memorySize == 0)) {
         self.memorySize--;
     }
     
+    //先从内存字典取出待删除的缓存项
     if (!cacheObj) {
         cacheObj = [self.objectMap objectForKey:key];
     }
     
+    //修正内存开销
     if (!(self.memoryTotalCost == 0)) {
         self.memoryTotalCost -= [cacheObj x_cacheSize];
     }
     
+    //从内存字典移除
     [self.objectMap removeObjectForKey:key];
+    
     [self.lock unlock];
 }
 
@@ -268,7 +276,7 @@
     
     _isArchivring = YES;
     
-    NSArray *keys = [self.objectMap allKeys];
+    NSArray *keys = self.keyList;
     
     for (id key in keys) {
         XCacheObject *obj = [self.objectMap objectForKey:key];

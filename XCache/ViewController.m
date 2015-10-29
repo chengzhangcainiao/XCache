@@ -39,7 +39,7 @@
     [self.view addSubview:btn];
     
 //    [btn addTarget:self action:@selector(testLock) forControlEvents:UIControlEventTouchUpInside];
-    [btn addTarget:self action:@selector(testCache) forControlEvents:UIControlEventTouchUpInside];
+    [btn addTarget:self action:@selector(testArray) forControlEvents:UIControlEventTouchUpInside];
     
 //    NSString *path = [NSFileManager pathForRootDirectoryWithPath:@"ccc"];
 //    NSString *path = @"/dawd/dawdaw/ccc";//默认在document/dawd/dawdaw/ccc
@@ -138,6 +138,16 @@
     
     [_lock1 unlock];
     NSLog(@"lock1 unlock\n");
+}
+
+- (void)testArray {
+    
+    NSMutableArray *list = [@[@"111", @"111",@"111",@"111",@"111",@"111",@"111",@"111"] mutableCopy];
+    
+    while (list.count > 0) {
+        [list removeObjectAtIndex:(list.count - 1)];
+    }
+    
 }
 
 @end

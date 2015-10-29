@@ -38,7 +38,12 @@
 /**
  *  内存队列最大缓存对象的长度
  */
-+ (NSInteger)x_defaultMaxQueueSize;
++ (NSInteger)x_maxMemoryQueueSize;
+
+/**
+ *  使用LRU-K替换策略时，history queue的最大长度
+ */
++ (NSInteger)x_maxHistoryQueueSize;
 
 /**
  *  内存池最大缓存对象的长度

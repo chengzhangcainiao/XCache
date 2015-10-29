@@ -16,17 +16,26 @@ static NSString *XCacheFolderName = @"XCacheObjects";
     return XCacheFolderName;
 }
 
-+ (NSInteger)x_maxCacheOnMemoryTime {
++ (NSTimeInterval)x_maxCacheOnMemoryTime {
     return 86400;//一天
 }
 
-+ (NSInteger)x_maxCacheOnDiskTime {
++ (NSTimeInterval)x_maxCacheOnDiskTime {
     return 7 * 86400;//一周
 }
 
-+ (NSInteger)x_defaultMaxQueueSize {
++ (NSTimeInterval)x_cycleArchiveTime {
+    //    return 10;
+    return 5;
+}
+
++ (NSInteger)x_maxMemoryQueueSize {
 //    return 20;
     return 5;
+}
+
++ (NSInteger)x_maxHistoryQueueSize {
+    return INT_MAX;
 }
 
 + (NSInteger)x_defaultMaxPoolSize {
@@ -45,11 +54,6 @@ static NSString *XCacheFolderName = @"XCacheObjects";
 
 + (NSInteger)x_maxCacheOnDiskCost {
     return 200 * 1024 *1024;//200M
-}
-
-+ (NSInteger)x_cycleArchiveTime {
-//    return 10;
-    return 5;
 }
 
 + (BOOL)x_isArchiverWhenLose {

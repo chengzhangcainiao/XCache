@@ -33,12 +33,20 @@
 @property (nonatomic, strong, readonly) XCacheFastTable *fastTable;
 
 /**
- *  保存所有缓存的key
+ *  保存所有缓存的key:NSString*
  */
-@property (nonatomic, strong) NSMutableArray *keyList;
+@property (nonatomic, strong) NSArray *keyList;
+
+/**
+ *  保存所有缓存的key对应的value:XCacheObject*
+ */
+@property (nonatomic, strong) NSArray *valueList;
 
 /**
  *  保存所有缓存的key-value
+ *
+ *  key: NSString*
+ *  value: XCacheObject*
  */
 @property (nonatomic, strong) NSMutableDictionary *objectMap;
 

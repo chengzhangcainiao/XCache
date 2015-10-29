@@ -214,38 +214,36 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 - (void)x_cleaningCacheObjects {
     [self.lock lock];
     
-    NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
-    
-    NSInteger maxCount = [XCacheConfig x_maxCacheOnMemorySize];
-    
-    NSInteger maxCost = [XCacheConfig x_maxCacheOnMemoryCost];
-    
+    NSMutableArray *keys = [[self.store keyList] mutableCopy];
+    NSInteger maxKeyCount = [XCacheConfig x_maxCacheOnMemorySize];
+    NSInteger maxCacheCost = [XCacheConfig x_maxCacheOnMemoryCost];
     BOOL isArchiveWhenLose = [XCacheConfig x_isArchiverWhenLose];
     
     //当前是否可以进行写入操作
     BOOL isArchiving = YES;
     
-    //当超过规定长度 或 规定大小
-    while (([keys count] > maxCount) || (self.store.memoryTotalCost > maxCost)) {
-        
-        //保存找到的最久未使用的缓存项的visitOrder
-        NSInteger oldestOrder = INT_MAX;
+    //清理内存缓存条件
+    //1. 当前内存缓存的个数 > 规定的长度
+    //2. 当前内存缓存的总开销 > 规定的大小
+    while (([keys count] > maxKeyCount) || (self.store.memoryTotalCost > maxCacheCost)) {
         
         //保存找到的最久未使用的缓存项
         XCacheObject *oldestObject = nil;
-        
-        //保存找到的最久未使用的缓存项的Key
+        NSInteger oldestOrder = INT_MAX;
         id oldestkey = @"";
         
         //查询最小的
-        [self x_findMinOderAndMinCountCacheObjectForKey:&oldestkey Object:&oldestObject Order_p:&oldestOrder];
+        [self x_findMinOderAndMinCountCacheObjectForKey:&oldestkey
+                                                 Object:&oldestObject
+                                                Order_p:&oldestOrder];
         
-        //找到了久未使用的缓存项
+        //找到了久未使用的缓存项，将其归档到本地
         if (oldestkey) {
             
             //判断是否写入磁盘文件
             if (isArchiving && isArchiveWhenLose) {
-                [self.store x_dataWriteToRootFolderWithKey:oldestkey Data:[oldestObject x_cacheData]];
+                [self.store x_dataWriteToRootFolderWithKey:oldestkey
+                                                      Data:[oldestObject x_cacheData]];
             }
             
             //从内存删除
@@ -267,7 +265,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 - (void)x_recycleCurrentVisitOrder {
     
     //遍历objectMap保存的CacheObject实例，按照visitOrder从小到大排序
-    NSArray *resultArray = [[self.store.objectMap allValues] sortedArrayUsingComparator:^NSComparisonResult(XCacheObject *obj1, XCacheObject *obj2) {
+    NSArray *resultArray = [[self.store valueList] sortedArrayUsingComparator:^NSComparisonResult(XCacheObject *obj1, XCacheObject *obj2) {
         return (NSComparisonResult)MIN(1, MAX(-1, obj1.visitOrder - obj2.visitOrder));
     }];
     
@@ -281,20 +279,18 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     _currentVisitCount = index;
 }
 
+/**
+ *  使用LRU淘汰算法，查找到最小visitOrder的缓存项
+ */
 - (void)x_findMinOderAndMinCountCacheObjectForKey:(id *)key_p
                                          Object:(XCacheObject **)obj_p
                                         Order_p:(NSInteger *)order_p
 {
     
-    NSMutableArray *keys = [[[self.store objectMap] allKeys] mutableCopy];
+    NSMutableArray *keys = [[self.store keyList] mutableCopy];
     
-    //保存找到的最久未使用的缓存项的visitOrder
     NSInteger minOrder = INT_MAX;
-    
-    //保存找到的最久未使用的缓存项
     XCacheObject *oldestObject = nil;
-    
-    //保存找到的最久未使用的缓存项的Key
     id oldestkey = nil;
     
     //遍历所有缓存项
@@ -321,6 +317,10 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     *order_p = minOrder;
 }
 
+/**
+ *  visitOrder++
+ *  循环处理visitOrder
+ */
 - (void)x_updateCacheObjectVisitOrder:(XCacheObject *)cacheObject {
     
     //修改找到的对象的顺序值
@@ -340,7 +340,7 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 
 @property (nonatomic, strong) NSTimer *histotyTimer;
 
-- (void)x_startScheduleHistoryQueue;
+- (NSString *)x_startScheduleHistoryQueue;
 
 @end
 
@@ -390,18 +390,59 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
     if (![self x_isConstainKeyInObjectMap:key]) {
         [self x_updateCacheObjectVisitOrderAndVisitCount:object];
         
-        //暂时不淘汰访问历史项，因为长度不好确定
+        //将当前被访问的Key放入到historyQueue
         [self.historyQueue x_enqueObject:key];
+        
+        //调整historyQueue里面的key，是否能够调入到cacheQueue
         [self x_startScheduleHistoryQueue];
     }
     
+    //开始清理内存
     [self x_cleaningCacheObjects];
 }
 
-- (void)x_cleaningCacheObjects {
+- (void)x_cleaningCacheObjects {//lru-k替换策略
+    [self.lock lock];
+    BOOL isArchiving = NO;
     
+    NSMutableArray *keys = [[self.store keyList] mutableCopy];
+    NSInteger maxCacheCount = [XCacheConfig x_maxMemoryQueueSize];
+    NSInteger maxCacheCost = [XCacheConfig x_maxCacheOnMemoryCost];
+    BOOL isArchiveWhenLose = [XCacheConfig x_isArchiverWhenLose];
+    
+    while (([keys count] > maxCacheCount) || ([self.store memoryTotalCost] > maxCacheCost)) {
+        
+        //从cacheQueue找到最久未被使用的缓存项
+        NSString *oldestKey = [self findOldestNotVisitCacheKeyInCacheQueue];
+        
+        //将淘汰的缓存项其归档到本地
+        if (oldestKey) {
+            
+            //取出key对应的缓存项
+            XCacheObject *cacheObject = [[self.store objectMap] objectForKey:oldestKey];
+            
+            //当前没有进行其他的归档操作
+            if (isArchiving && isArchiveWhenLose) {
+                NSData *cacheData = [cacheObject x_cacheData];
+                [self.store x_dataWriteToRootFolderWithKey:oldestKey Data:cacheData];
+            }
+            
+            //从内存中删除
+            [self.store x_removeMemoryCacheObject:cacheObject WithKey:oldestKey];
+            
+            //遍历数组移除key
+            [keys removeObject:oldestKey];
+        }
+    }
+    
+    isArchiving = YES;
+    [self.lock unlock];
 }
 
+/**
+ *  visitOrder++
+ *  visitCount++
+ */
 - (void)x_updateCacheObjectVisitOrderAndVisitCount:(XCacheObject *)cacheObject {
     [self x_updateCacheObjectVisitOrder:cacheObject];
     cacheObject.visitCount++;
@@ -410,29 +451,67 @@ static NSInteger LRU_K_COUNT = 2;//淘汰最近被访问次数少于2次的缓�
 /**
  *  将historyQueue中的缓存项，访问次数超过k次的调入cacheQueue
  */
-- (void)x_startScheduleHistoryQueue {
+- (NSString *)x_startScheduleHistoryQueue {
+    
+    __block NSString *popKey = nil;
+    
     NSArray *historyCopy = [self.historyQueue copy];
-    for (int i = 0; i < historyCopy.count; i++) {
-        NSString *key = [historyCopy objectAtIndex:i];
-        XCacheObject *object = [[self.store objectMap] objectForKey:key];
-        if ([object visitCount] > _k) {
-            [self.cacheQueue x_enqueObject:key];
+    
+    __weak __typeof(self)weakSelf = self;
+    [historyCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        
+        if ([obj isKindOfClass:[NSString class]]) {
+            
+            NSString *key = obj;
+            XCacheObject *object = [[strongSelf.store objectMap] objectForKey:key];
+            
+            if (![[strongSelf.store keyList] containsObject:@"key"]) {
+                if ([object visitCount] > _k) {
+                    [strongSelf.cacheQueue x_enqueObject:key];
+                    
+                    //如果超过historyQueue长度
+                    if ([strongSelf.cacheQueue count] > [XCacheConfig x_maxHistoryQueueSize]) {
+                        
+                        //取出队头的key
+                        NSString *oldestKey = [strongSelf.cacheQueue x_dequeObject];
+                        popKey = [oldestKey copy];
+                    }
+                }
+            }
         }
-    }
+    }];
+    
+    return popKey;
 }
 
-- (NSString *)findMinKeyInCacheQueue {
-    NSString *minKey = nil;
-    NSInteger minVisistOrder = INT_MAX;
+/**
+ *  在cacheQueue中查找最久未被使用的缓存项的key
+ */
+- (NSString *)findOldestNotVisitCacheKeyInCacheQueue {
+    
+    __block NSString *minKey = nil;
+    __block NSInteger minVisistOrder = INT_MAX;
+    
     NSArray *cacheCopy = [self.cacheQueue copy];
-    for (int i = 0; i < cacheCopy.count; i++) {
-        NSString *key = [cacheCopy objectAtIndex:i];
-        XCacheObject *object = [[self.store objectMap] objectForKey:key];
-        if (object.visitOrder < minVisistOrder) {
-            minVisistOrder = object.visitOrder;
-            minKey = key;
+    
+    __weak __typeof(self)weakSelf = self;
+    [cacheCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        
+        if ([obj isKindOfClass:[NSString class]]) {
+            
+            NSString *key = obj;
+            XCacheObject *object = [[strongSelf.store objectMap] objectForKey:key];
+            
+            if (object.visitOrder < minVisistOrder) {
+                minVisistOrder = object.visitOrder;
+                minKey = key;
+            }
+
         }
-    }
+    }];
+    
     return minKey;
 }
 
